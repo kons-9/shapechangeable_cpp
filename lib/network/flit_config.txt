@@ -1,0 +1,16 @@
+v0.1:64
+    headflit: 
+        flittype:2:flitid:6:header:8:nodeid:16:nodeid:16:packetid:8:checksum:8
+    bodyflit:
+    tailflit:
+        flittype:2:flitid:6:message:48:checksum:8
+    
+v0.2:128
+    headflit:
+        version:8:flittype:8:flitid:32:header:8:nodeid:16:nodeid:16:packetid:16:checksum:16:option:8
+    bodyflit:
+    tailflit:
+        flittype:8:flitid:32:message:72:checksum:16
+        
+
+
