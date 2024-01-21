@@ -15,3 +15,30 @@ enum FlitError {
     INVALID_VERSION,
 };
 }  // namespace flit
+namespace packet {
+enum PacketError {
+    OK = 0,
+
+    INVALID_PACKET_CONFIG = 1,
+
+    // parser error
+    INVALID_VERSION = 100,
+    INVALID_LENGTH,
+    INVALID_CHECKSUM,
+    INVALID_PROTOCOL,
+    NOT_END,
+
+    // validation
+    OVER_MTU,
+    EMPTY,
+    NOT_SAME_PACKET_ID,
+    INSUFFICIENT_FRAGMENT,
+    VERSION_UNSUPPORTED,
+    UNSUPPORTED,
+    CHECKSUM_NOT_MATCH,
+
+    // to flit
+    NOT_READY,
+    ALREADY_FINISHED,
+};
+}  // namespace packet

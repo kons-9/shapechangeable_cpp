@@ -1,0 +1,9 @@
+v0.1:
+    packetid:8:checksum:8:nodeid:16:nodeId:16:data:max()
+
+v0.2:
+    version:8:headlength:8:priority:8:packetid:16:nodeid:16:nodeid:16:
+    flag:8:fragment:8:headchecksum:16:protocol:8:option:data:max()
+    
+    flag: is_fragment | option_flag(undefined)
+    min header = 8*6+16*4 = 112 bit = 14 byte
