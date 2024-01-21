@@ -21,7 +21,10 @@ enum class FlitType : flittype_t {
 };
 
 class Flit {
-  protected:
+#if CFG_TEST_PUBLIC == true
+  public:
+#endif
+
   public:
     virtual checksum_t culculate_checksum() const = 0;
     virtual FlitType get_type(void) const = 0;
@@ -32,7 +35,10 @@ class Flit {
     virtual ~Flit() = default;
 };
 
-class NopeFlit : public Flit {
+class NopeFlit : Flit {
+#if CFG_TEST_PUBLIC == true
+  public:
+#endif
     version_t version;
     checksum_t checksum;
 
@@ -40,11 +46,14 @@ class NopeFlit : public Flit {
     NopeFlit()
         : version(CONFIG_CURRENT_VERSION)
         , checksum(0){};
+
     NopeFlit(const version_t &version, const checksum_t &checksum)
         : version(version)
         , checksum(checksum){};
 
-    checksum_t culculate_checksum() const override;
+    checksum_t culculate_checksum() const override {
+        return 0;
+    };
     FlitType get_type(void) const override {
         return FlitType::Nope;
     };
@@ -64,6 +73,9 @@ class NopeFlit : public Flit {
 };
 
 class HeadFlit : Flit {
+#if CFG_TEST_PUBLIC == true
+  public:
+#endif
     version_t version;
     flitid_t length;
     Header header;
@@ -78,15 +90,14 @@ class HeadFlit : Flit {
              const Header &header,
              const packetid_t &packetid,
              const node_id_t &src,
-             const node_id_t &dst,
-             const option_t &option)
+             const node_id_t &dst)
         : version(CONFIG_CURRENT_VERSION)
         , length(length)
         , header(header)
         , src(src)
         , dst(dst)
         , packetid(packetid)
-        , option(option)
+        , option(0)
         , checksum(culculate_checksum()){};
 
     HeadFlit(const version_t &version,
@@ -124,6 +135,9 @@ class HeadFlit : Flit {
 };
 
 class BodyFlit : Flit {
+#if CFG_TEST_PUBLIC == true
+  public:
+#endif
     version_t version;
     flitid_t id;
     message_t data;

@@ -1,6 +1,13 @@
 #include "flit.hpp"
 
 namespace flit {
+void NopeFlit::to_rawdata(raw_data_t &raw_data) const {
+    raw_data[0] = static_cast<uint8_t>(version);
+    raw_data[1] = static_cast<uint8_t>(FlitType::Nope);
+    // version:8:flittype:8:checksum:16
+    raw_data[14] = checksum >> 8;
+    raw_data[15] = checksum & 0xff;
+};
 FlitError HeadFlit::validate() const {
     if (version != CONFIG_CURRENT_VERSION) {
         return FlitError::INVALID_VERSION;
