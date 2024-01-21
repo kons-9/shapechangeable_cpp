@@ -1,7 +1,7 @@
 #include "flit.hpp"
 
 namespace flit {
-FlitError Flit::validate() {
+FlitError Flit::validate() const {
     if (version != CONFIG_CURRENT_VERSION) {
         return FlitError::INVALID_VERSION;
     }
@@ -25,7 +25,7 @@ FlitError Flit::validate() {
 
     return FlitError::OK;
 }
-checksum_t Flit::culculate_checksum() {
+checksum_t Flit::culculate_checksum() const {
     checksum_t checksum = 0;
     switch (type) {
     case FlitType::Head:
@@ -52,7 +52,7 @@ checksum_t Flit::culculate_checksum() {
     }
     return checksum;
 }
-void Flit::to_rawdata(raw_data_t &raw_data) {
+void Flit::to_rawdata(raw_data_t &raw_data) const {
     raw_data[0] = static_cast<uint8_t>(version);
     raw_data[1] = static_cast<uint8_t>(type);
     switch (type) {

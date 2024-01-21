@@ -22,7 +22,10 @@ static constexpr std::size_t CONFIG_FRAGMENT_SIZE = 8;
 static constexpr std::size_t CONFIG_HEAD_CHECKSUM_SIZE = 16;
 static constexpr std::size_t CONFIG_PROTOCOL_SIZE = 8;
 
+// byte size
+// must be multiple of flit::CONFIG_MESSAGE_LENGTH
 static constexpr std::size_t CONFIG_MTU = 1500;
+static_assert(CONFIG_MTU % flit::CONFIG_MESSAGE_LENGTH == 0);
 
 using version_t = uint8_t;
 using length_t = uint8_t;

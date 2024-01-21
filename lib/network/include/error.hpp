@@ -36,5 +36,9 @@ enum PacketError {
     VERSION_UNSUPPORTED,
     UNSUPPORTED,
     CHECKSUM_NOT_MATCH,
+
+    // to flit
+    NOT_READY,
+    ALREADY_FINISHED,
 };
 }  // namespace packet

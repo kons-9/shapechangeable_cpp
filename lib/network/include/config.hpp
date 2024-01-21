@@ -4,6 +4,12 @@
 
 #include <array>
 #include <cstdint>
+#include <numeric>
+
+namespace header {
+static constexpr std::size_t CONFIG_HEADER_SIZE = 16;
+using header_t = uint16_t;
+}  // namespace header
 
 namespace flit {
 // flit
@@ -39,6 +45,11 @@ using option_t = uint16_t;
 
 using message_element_t = uint8_t;
 using message_t = std::array<message_element_t, CONFIG_MESSAGE_LENGTH>;
+
+static constexpr message_element_t FLIT_EOF = std::numeric_limits<message_element_t>::max();
+static_assert(FLIT_EOF == 0xFF);
+
+static_assert(sizeof(header_t) == sizeof(header::header_t));
 
 static_assert(8 * CONFIG_FLIT_LENGTH == CONFIG_FLIT_SIZE);
 static_assert(sizeof(flittype_t) == CONFIG_TYPE_SIZE / 8);

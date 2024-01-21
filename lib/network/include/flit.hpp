@@ -3,18 +3,17 @@
 #include "config.hpp"
 #include "raw_data.hpp"
 #include "error.hpp"
+#include "header.hpp"
+#include "packet_config.hpp"
 
 namespace flit {
+using Header = header::Header;
 
 enum class FlitType : flittype_t {
     Nope = 0,
     Head,
     Body,
     Tail,
-};
-
-enum class Header : header_t {
-    None = 0,
 };
 
 struct Flit {
@@ -50,43 +49,64 @@ struct Flit {
             message_t data;
         } tail;
     };
-    checksum_t culculate_checksum();
+    checksum_t culculate_checksum() const;
 
   public:
-    FlitType get_type(void) {
+    FlitType get_type(void) const {
         return type;
     };
-    FlitError validate(void);
-    void to_rawdata(raw_data_t &raw_data);
+    FlitError validate(void) const;
+    void to_rawdata(raw_data_t &raw_data) const;
     // head flit
-    Flit(flitid_t &&length, Header &&header, packetid_t &&packetid, node_id_t &&src, node_id_t &&dst) {
+    Flit(const flitid_t &length,
+         const Header &header,
+         const packetid_t &packetid,
+         const node_id_t &src,
+         const node_id_t &dst) {
+
         type = FlitType::Head;
         version = CONFIG_CURRENT_VERSION;
-        head.length = std::move(length);
-        head.header = std::move(header);
-        head.src = std::move(src);
-        head.dst = std::move(dst);
-        head.packetid = std::move(packetid);
+        head.length = length;
+        head.header = header;
+        head.src = src;
+        head.dst = dst;
+        head.packetid = packetid;
         head.option = 0;
 
         checksum = culculate_checksum();
     };
 
     // body flit or tail flit
-    Flit(flitid_t &&flitid, message_t &&data, bool is_tail = false) {
+    Flit(const flitid_t &flitid, message_t &&data, const bool is_tail = false) {
         version = CONFIG_CURRENT_VERSION;
         if (is_tail) {
             type = FlitType::Tail;
-            tail.id = std::move(flitid);
+            tail.id = (flitid);
             tail.data = std::move(data);
         } else {
             type = FlitType::Body;
-            body.id = std::move(flitid);
+            body.id = (flitid);
             body.data = std::move(data);
         }
 
         checksum = culculate_checksum();
     };
+
+    void copy_packet(const flitid_t &flitid,
+                     const packet::message_buffer_t::const_iterator &data,
+                     const bool is_tail = false) {
+        type = is_tail ? FlitType::Tail : FlitType::Body;
+        version = CONFIG_CURRENT_VERSION;
+        if (is_tail) {
+            tail.id = flitid;
+            // data to data + CONFIG_MESSAGE_LENGTH
+            std::copy(data, data + CONFIG_MESSAGE_LENGTH, tail.data.begin());
+        } else {
+            body.id = flitid;
+            std::copy(data, data + CONFIG_MESSAGE_LENGTH, body.data.begin());
+        }
+        checksum = culculate_checksum();
+    }
 
     // nope flit
     Flit()
