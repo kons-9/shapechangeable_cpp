@@ -1,10 +1,14 @@
 #pragma once
-#include <cstdint>
 #include "config.hpp"
 #include "raw_data.hpp"
 #include "error.hpp"
 #include "header.hpp"
 #include "packet_config.hpp"
+
+#include <cstdint>
+#include <optional>
+#include <variant>
+#include <memory>
 
 namespace flit {
 using Header = header::Header;
@@ -16,168 +20,182 @@ enum class FlitType : flittype_t {
     Tail,
 };
 
-struct Flit {
+class Flit {
+  protected:
+  public:
+    virtual checksum_t culculate_checksum() const = 0;
+    virtual FlitType get_type(void) const = 0;
+    virtual FlitError validate(void) const = 0;
+    virtual std::optional<message_t> get_data(void) = 0;
+    virtual std::optional<flitid_t> get_id(void) const = 0;
+    virtual void to_rawdata(raw_data_t &raw_data) const = 0;
+    virtual ~Flit() = default;
+};
+
+class NopeFlit : public Flit {
+    version_t version;
+    checksum_t checksum;
+
+  public:
+    NopeFlit()
+        : version(CONFIG_CURRENT_VERSION)
+        , checksum(0){};
+    NopeFlit(const version_t &version, const checksum_t &checksum)
+        : version(version)
+        , checksum(checksum){};
+
+    checksum_t culculate_checksum() const override;
+    FlitType get_type(void) const override {
+        return FlitType::Nope;
+    };
+    FlitError validate(void) const override {
+        return FlitError::OK;
+    };
+    std::optional<message_t> get_data(void) override {
+        return std::nullopt;
+    };
+    std::optional<flitid_t> get_id(void) const override {
+        return std::nullopt;
+    };
+    void to_rawdata(raw_data_t &raw_data) const override;
+    bool operator==(const NopeFlit &rhs) const {
+        return version == rhs.version;
+    };
+};
+
+class HeadFlit : Flit {
+    version_t version;
+    flitid_t length;
+    Header header;
+    node_id_t src;
+    node_id_t dst;
+    packetid_t packetid;
+    option_t option;
+    checksum_t checksum;
+
+  public:
+    HeadFlit(const flitid_t &length,
+             const Header &header,
+             const packetid_t &packetid,
+             const node_id_t &src,
+             const node_id_t &dst,
+             const option_t &option)
+        : version(CONFIG_CURRENT_VERSION)
+        , length(length)
+        , header(header)
+        , src(src)
+        , dst(dst)
+        , packetid(packetid)
+        , option(option)
+        , checksum(culculate_checksum()){};
+
+    HeadFlit(const version_t &version,
+             const flitid_t &length,
+             const Header &header,
+             const packetid_t &packetid,
+             const node_id_t &src,
+             const node_id_t &dst,
+             const option_t &option,
+             const checksum_t &checksum)
+        : version(version)
+        , length(length)
+        , header(header)
+        , src(src)
+        , dst(dst)
+        , packetid(packetid)
+        , option(option)
+        , checksum(checksum){};
+    checksum_t culculate_checksum() const override;
+    FlitType get_type(void) const override {
+        return FlitType::Head;
+    };
+    FlitError validate(void) const override;
+    std::optional<message_t> get_data(void) override {
+        return std::nullopt;
+    };
+    std::optional<flitid_t> get_id(void) const override {
+        return std::nullopt;
+    };
+    void to_rawdata(raw_data_t &raw_data) const override;
+    bool operator==(const HeadFlit &rhs) const {
+        return version == rhs.version && length == rhs.length && header == rhs.header && src == rhs.src
+               && dst == rhs.dst && packetid == rhs.packetid && option == rhs.option;
+    };
+};
+
+class BodyFlit : Flit {
+    version_t version;
+    flitid_t id;
+    message_t data;
+    checksum_t checksum;
+
+  public:
+    BodyFlit(const flitid_t &id, message_t &&data)
+        : version(CONFIG_CURRENT_VERSION)
+        , id(id)
+        , data(std::move(data))
+        , checksum(culculate_checksum()){};
+
+    BodyFlit(const version_t &version, const flitid_t &id, message_t &&data, const checksum_t &checksum)
+        : version(version)
+        , id(id)
+        , data(std::move(data))
+        , checksum(checksum){};
+    checksum_t culculate_checksum() const override;
+    FlitType get_type(void) const override {
+        return FlitType::Body;
+    };
+    FlitError validate(void) const override;
+    std::optional<message_t> get_data(void) override {
+        return data;
+    };
+    std::optional<flitid_t> get_id(void) const override {
+        return id;
+    };
+    void to_rawdata(raw_data_t &raw_data) const override;
+    bool operator==(const BodyFlit &rhs) const {
+        return version == rhs.version && id == rhs.id && data == rhs.data;
+    };
+};
+
+class TailFlit : Flit {
 #if CFG_TEST_PUBLIC == true
   public:
-#else
-  private:
 #endif
-    FlitType type : CONFIG_TYPE_SIZE;
-    version_t version : CONFIG_VERSION_SIZE;
+    version_t version;
+    flitid_t id;
+    message_t data;
     checksum_t checksum;
-    union {
-        // nope flit
-        struct {
-        } nope;
-        // head flit
-        struct {
-            flitid_t length;
-            Header header;
-            node_id_t src;
-            node_id_t dst;
-            packetid_t packetid;
-            option_t option;
-        } head;
-        // body flit
-        struct {
-            flitid_t id;
-            message_t data;
-        } body;
-        // tail flit
-        struct {
-            flitid_t id;
-            message_t data;
-        } tail;
-    };
-    checksum_t culculate_checksum() const;
 
   public:
-    FlitType get_type(void) const {
-        return type;
+    TailFlit(const flitid_t &id, message_t &&data)
+        : version(CONFIG_CURRENT_VERSION)
+        , id(id)
+        , data(std::move(data))
+        , checksum(culculate_checksum()){};
+    TailFlit(const version_t &version, const flitid_t &id, message_t &&data, const checksum_t &checksum)
+        : version(version)
+        , id(id)
+        , data(std::move(data))
+        , checksum(checksum){};
+    checksum_t culculate_checksum() const override;
+    FlitType get_type(void) const override {
+        return FlitType::Tail;
     };
-    FlitError validate(void) const;
-    void to_rawdata(raw_data_t &raw_data) const;
-    // head flit
-    Flit(const flitid_t &length,
-         const Header &header,
-         const packetid_t &packetid,
-         const node_id_t &src,
-         const node_id_t &dst) {
-
-        type = FlitType::Head;
-        version = CONFIG_CURRENT_VERSION;
-        head.length = length;
-        head.header = header;
-        head.src = src;
-        head.dst = dst;
-        head.packetid = packetid;
-        head.option = 0;
-
-        checksum = culculate_checksum();
+    FlitError validate(void) const override;
+    std::optional<message_t> get_data(void) override {
+        return std::move(data);
     };
-
-    // body flit or tail flit
-    Flit(const flitid_t &flitid, message_t &&data, const bool is_tail = false) {
-        version = CONFIG_CURRENT_VERSION;
-        if (is_tail) {
-            type = FlitType::Tail;
-            tail.id = (flitid);
-            tail.data = std::move(data);
-        } else {
-            type = FlitType::Body;
-            body.id = (flitid);
-            body.data = std::move(data);
-        }
-
-        checksum = culculate_checksum();
+    std::optional<flitid_t> get_id(void) const override {
+        return id;
     };
-
-    void copy_packet(const flitid_t &flitid,
-                     const packet::message_buffer_t::const_iterator &data,
-                     const bool is_tail = false) {
-        type = is_tail ? FlitType::Tail : FlitType::Body;
-        version = CONFIG_CURRENT_VERSION;
-        if (is_tail) {
-            tail.id = flitid;
-            // data to data + CONFIG_MESSAGE_LENGTH
-            std::copy(data, data + CONFIG_MESSAGE_LENGTH, tail.data.begin());
-        } else {
-            body.id = flitid;
-            std::copy(data, data + CONFIG_MESSAGE_LENGTH, body.data.begin());
-        }
-        checksum = culculate_checksum();
-    }
-
-    // nope flit
-    Flit()
-        : type(FlitType::Nope)
-        , version(CONFIG_CURRENT_VERSION)
-        , checksum(0){};
-
-
-    // decoder
-    Flit(raw_data_t &raw_data) {
-        version = raw_data[0];
-        type = static_cast<FlitType>(raw_data[1]);
-
-        switch (type) {
-        case FlitType::Head:
-            // version:8:flittype:8:nodeid:16:nodeid:16:packetid:16:flitid:16:header:16:option:16:checksum:16
-            head.src = raw_data[2] << 8 | raw_data[3];
-            head.dst = raw_data[4] << 8 | raw_data[5];
-            head.packetid = raw_data[6] << 8 | raw_data[7];
-            head.length = raw_data[8] << 8 | raw_data[9];
-            head.header = static_cast<Header>(raw_data[10] << 8 | raw_data[11]);
-            head.option = raw_data[12] << 8 | raw_data[13];
-            break;
-        case FlitType::Body:
-            // version:8:flittype:8:flitid:16:message:80:checksum:16
-            body.id = raw_data[2] << 8 | raw_data[3];
-
-            for (int i = 0; i < CONFIG_MESSAGE_LENGTH; i++) {
-                body.data[i] = raw_data[i + 4];
-            }
-            break;
-        case FlitType::Tail:
-            tail.id = raw_data[2] << 8 | raw_data[3];
-            for (int i = 0; i < CONFIG_MESSAGE_LENGTH; i++) {
-                tail.data[i] = raw_data[i + 4];
-            }
-            break;
-        case FlitType::Nope: break;
-        default: break;
-        }
-        checksum = raw_data[14] << 8 | raw_data[15];
-    }
-    bool operator==(const Flit &rhs) const {
-        if (type != rhs.type || version != rhs.version) {
-            return false;
-        }
-        switch (type) {
-        case FlitType::Head:
-            if (head.length != rhs.head.length || head.header != rhs.head.header || head.src != rhs.head.src
-                || head.dst != rhs.head.dst || head.packetid != rhs.head.packetid || head.option != rhs.head.option) {
-                return false;
-            }
-            break;
-        case FlitType::Body:
-            if (body.id != rhs.body.id || body.data != rhs.body.data) {
-                return false;
-            }
-            break;
-        case FlitType::Tail:
-            if (tail.id != rhs.tail.id || tail.data != rhs.tail.data) {
-                return false;
-            }
-            break;
-        case FlitType::Nope: break;
-        default: break;
-        }
-        if (checksum != rhs.checksum) {
-            return false;
-        }
-        return true;
-    }
+    void to_rawdata(raw_data_t &raw_data) const override;
+    bool operator==(const TailFlit &rhs) const {
+        return version == rhs.version && id == rhs.id && data == rhs.data;
+    };
 };
+
+// TODO: std::uniqueptr を使う
+std::variant<FlitError, HeadFlit, BodyFlit, TailFlit, NopeFlit> decoder(raw_data_t &raw_data);
 
 }  // namespace flit

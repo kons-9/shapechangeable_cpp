@@ -2,6 +2,7 @@
 
 #include "error.hpp"
 
+#include <vector>
 #include <array>
 #include <cstdint>
 #include <numeric>
@@ -44,7 +45,7 @@ using checksum_t = uint16_t;
 using option_t = uint16_t;
 
 using message_element_t = uint8_t;
-using message_t = std::array<message_element_t, CONFIG_MESSAGE_LENGTH>;
+using message_t = std::vector<message_element_t>;
 
 static constexpr message_element_t FLIT_EOF = std::numeric_limits<message_element_t>::max();
 static_assert(FLIT_EOF == 0xFF);
