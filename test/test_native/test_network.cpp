@@ -135,7 +135,7 @@ TEST(Flit, NopeFlit) {
     EXPECT_EQ(flit, flit2);
 }
 
-TEST(Packet, general) {
+TEST(Packet, header) {
 }
 
 int main(int argc, char **argv) {
