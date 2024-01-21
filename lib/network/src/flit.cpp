@@ -53,47 +53,42 @@ checksum_t Flit::culculate_checksum() {
     return checksum;
 }
 void Flit::to_rawdata(raw_data_t &raw_data) {
-    raw_data[0] = (static_cast<uint8_t>(type) & 0x0f) | (version << 4);
+    raw_data[0] = static_cast<uint8_t>(version);
+    raw_data[1] = static_cast<uint8_t>(type);
     switch (type) {
     case FlitType::Head:
-        //     version:4:flittype:4:flitid:32:header:8:nodeid:16:nodeid:16:packetid:16:option:16:checksum:16
-        raw_data[1] = head.length >> 24;
-        raw_data[2] = head.length >> 16;
-        raw_data[3] = head.length >> 8;
-        raw_data[4] = head.length;
-        raw_data[5] = static_cast<uint8_t>(head.header);
-        raw_data[6] = head.src >> 8;
-        raw_data[7] = head.src;
-        raw_data[8] = head.dst >> 8;
-        raw_data[9] = head.dst;
-        raw_data[10] = head.packetid >> 8;
-        raw_data[11] = head.packetid;
+        // version:8:flittype:8:nodeid:16:nodeid:16:packetid:16:flitid:16:header:16:option:16:checksum:16
+        raw_data[2] = head.src >> 8;
+        raw_data[3] = head.src & 0xff;
+        raw_data[4] = head.dst >> 8;
+        raw_data[5] = head.dst & 0xff;
+        raw_data[6] = head.packetid >> 8;
+        raw_data[7] = head.packetid & 0xff;
+        raw_data[8] = head.length >> 8;
+        raw_data[9] = head.length & 0xff;
+        raw_data[10] = static_cast<uint8_t>(head.header) >> 8;
+        raw_data[11] = static_cast<uint8_t>(head.header) & 0xff;
         raw_data[12] = head.option >> 8;
-        raw_data[13] = head.option;
+        raw_data[13] = head.option & 0xff;
         break;
     case FlitType::Body:
-        //     version:4:flittype:4:flitid:32:message:72:checksum:16
-        raw_data[1] = body.id >> 24;
-        raw_data[2] = body.id >> 16;
-        raw_data[3] = body.id >> 8;
-        raw_data[4] = body.id;
+        // version:8:flittype:8:flitid:16:message:80:checksum:16
+        raw_data[2] = body.id >> 8;
+        raw_data[3] = body.id & 0xff;
         for (int i = 0; i < CONFIG_MESSAGE_LENGTH; i++) {
-            raw_data[i + 5] = body.data[i];
+            raw_data[i + 4] = body.data[i];
         }
         break;
     case FlitType::Tail:
-        //     version:4:flittype:4:flitid:32:message:72:checksum:16
-        raw_data[1] = tail.id >> 24;
-        raw_data[2] = tail.id >> 16;
-        raw_data[3] = tail.id >> 8;
-        raw_data[4] = tail.id;
+        raw_data[2] = tail.id >> 8;
+        raw_data[3] = tail.id & 0xff;
         for (int i = 0; i < CONFIG_MESSAGE_LENGTH; i++) {
-            raw_data[i + 5] = tail.data[i];
+            raw_data[i + 4] = tail.data[i];
         }
         break;
     default: break;
     }
     raw_data[14] = checksum >> 8;
-    raw_data[15] = checksum;
+    raw_data[15] = checksum & 0xff;
 };
 }  // namespace flit

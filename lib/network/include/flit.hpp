@@ -6,14 +6,14 @@
 
 namespace flit {
 
-enum class FlitType : uint8_t {
+enum class FlitType : flittype_t {
     Nope = 0,
     Head,
     Body,
     Tail,
 };
 
-enum class Header : uint8_t {
+enum class Header : header_t {
     None = 0,
 };
 
@@ -23,8 +23,8 @@ struct Flit {
 #else
   private:
 #endif
-    FlitType type : 4;
-    version_t version : 4;
+    FlitType type : CONFIG_TYPE_SIZE;
+    version_t version : CONFIG_VERSION_SIZE;
     checksum_t checksum;
     union {
         // nope flit
@@ -73,15 +73,15 @@ struct Flit {
     };
 
     // body flit or tail flit
-    Flit(flitid_t &&id, message_t &&data, bool is_tail = false) {
+    Flit(flitid_t &&flitid, message_t &&data, bool is_tail = false) {
         version = CONFIG_CURRENT_VERSION;
         if (is_tail) {
             type = FlitType::Tail;
-            id = std::move(id);
+            tail.id = std::move(flitid);
             tail.data = std::move(data);
         } else {
             type = FlitType::Body;
-            id = std::move(id);
+            body.id = std::move(flitid);
             body.data = std::move(data);
         }
 
@@ -97,32 +97,31 @@ struct Flit {
 
     // decoder
     Flit(raw_data_t &raw_data) {
-        type = static_cast<FlitType>(raw_data[0] & 0x0f);
-        version = raw_data[0] >> 4;
+        version = raw_data[0];
+        type = static_cast<FlitType>(raw_data[1]);
 
         switch (type) {
         case FlitType::Head:
-            //     version:4:flittype:4:flitid:32:header:8:nodeid:16:nodeid:16:packetid:16:option:16:checksum:16
-            head.length = raw_data[1] << 24 | raw_data[2] << 16 | raw_data[3] << 8 | raw_data[4];
-            head.header = static_cast<Header>(raw_data[5]);
-            head.src = raw_data[6] << 8 | raw_data[7];
-            head.dst = raw_data[8] << 8 | raw_data[9];
-            head.packetid = raw_data[10] << 8 | raw_data[11];
+            // version:8:flittype:8:nodeid:16:nodeid:16:packetid:16:flitid:16:header:16:option:16:checksum:16
+            head.src = raw_data[2] << 8 | raw_data[3];
+            head.dst = raw_data[4] << 8 | raw_data[5];
+            head.packetid = raw_data[6] << 8 | raw_data[7];
+            head.length = raw_data[8] << 8 | raw_data[9];
+            head.header = static_cast<Header>(raw_data[10] << 8 | raw_data[11]);
             head.option = raw_data[12] << 8 | raw_data[13];
             break;
         case FlitType::Body:
-            //     version:4:flittype:4:flitid:32:message:72:checksum:16
-            body.id = raw_data[1] << 24 | raw_data[2] << 16 | raw_data[3] << 8 | raw_data[4];
+            // version:8:flittype:8:flitid:16:message:80:checksum:16
+            body.id = raw_data[2] << 8 | raw_data[3];
 
             for (int i = 0; i < CONFIG_MESSAGE_LENGTH; i++) {
-                body.data[i] = raw_data[i + 5];
+                body.data[i] = raw_data[i + 4];
             }
             break;
         case FlitType::Tail:
-            //     version:4:flittype:4:flitid:32:message:72:checksum:16
-            tail.id = raw_data[1] << 24 | raw_data[2] << 16 | raw_data[3] << 8 | raw_data[4];
+            tail.id = raw_data[2] << 8 | raw_data[3];
             for (int i = 0; i < CONFIG_MESSAGE_LENGTH; i++) {
-                tail.data[i] = raw_data[i + 5];
+                tail.data[i] = raw_data[i + 4];
             }
             break;
         case FlitType::Nope: break;
