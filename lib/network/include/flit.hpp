@@ -128,6 +128,26 @@ class HeadFlit : public Flit {
     std::optional<flitid_t> get_id(void) const override {
         return std::nullopt;
     };
+
+    packetid_t get_packet_id() const {
+        return packetid;
+    }
+    flitid_t get_length() const {
+        return length;
+    }
+    node_id_t get_src() const {
+        return src;
+    }
+    node_id_t get_dst() const {
+        return dst;
+    }
+    Header get_header() const {
+        return header;
+    }
+    option_t get_option() const {
+        return option;
+    }
+
     void to_rawdata(raw_data_t &raw_data) const override;
     bool operator==(const HeadFlit &rhs) const {
         return version == rhs.version && length == rhs.length && header == rhs.header && src == rhs.src

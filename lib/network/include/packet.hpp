@@ -44,12 +44,7 @@ class Packet {
     headchecksum_t caluculate_checksum() const;
 
     flit::flitid_t current_flit_index = 0;
-    flit::flitid_t flit_length = 0;
-    bool is_ready = false;
     bool ready() {
-        if (is_ready) {
-            return true;
-        }
         if (data.size() > CONFIG_MTU - 1) {
             return false;
         }
@@ -60,8 +55,6 @@ class Packet {
             // push 0 to last
             data.back().insert(data.back().end(), flit::CONFIG_MESSAGE_LENGTH - rem, 0);
         }
-        flit_length = data.size() / flit::CONFIG_MESSAGE_LENGTH;
-        is_ready = true;
         return true;
     }
 
@@ -79,13 +72,7 @@ class Packet {
     Packet() = default;
     /// @brief make a packet from flits
     /// donot check flits are valid
-    Packet(length_t head_length,
-           priority_t priority,
-           packetid_t packetid,
-           src_t src,
-           dst_t dst,
-           flag_t flag,
-           message_buffer_t &&data)
+    Packet(length_t head_length, priority_t priority, packetid_t packetid, src_t src, dst_t dst, flag_t flag)
         : version(CONFIG_CURRENT_VERSION)
         , head_length(head_length)
         , priority(priority)
@@ -95,8 +82,55 @@ class Packet {
         , flag(flag)
         , fragment(0)
         , protocol(static_cast<protocol_t>(Protocol::DEFAULT))
-        , headchecksum(caluculate_checksum())
-        , data(std::move(data)) {
+        , data(){};
+
+    Packet(length_t head_length,
+           priority_t priority,
+           packetid_t packetid,
+           src_t src,
+           dst_t dst,
+           flag_t flag,
+           std::vector<flit::message_element_t> &message)
+        : version(CONFIG_CURRENT_VERSION)
+        , head_length(head_length)
+        , priority(priority)
+        , packetid(packetid)
+        , global_src(src)
+        , global_dst(dst)
+        , flag(flag)
+        , fragment(0)
+        , protocol(static_cast<protocol_t>(Protocol::DEFAULT))
+        , headchecksum(caluculate_checksum()) {
+        // make header
+        auto header = make_header();
+
+        // make data
+        data = message_buffer_t();
+        data.push_back(std::move(header));
+        // one flit is CONFIG_MESSAGE_LENGTH
+        for (auto i = 0; i < message.size(); i += flit::CONFIG_MESSAGE_LENGTH) {
+            auto begin = message.begin() + i;
+            auto end = message.begin() + std::min(i + flit::CONFIG_MESSAGE_LENGTH, message.size());
+            data.push_back(std::vector<flit::message_element_t>(begin, end));
+        }
+    }
+    std::vector<flit::message_element_t> make_header() const {
+        std::vector<flit::message_element_t> header;
+        header.push_back(version);
+        header.push_back(head_length);
+        header.push_back(priority);
+        header.push_back(packetid >> 8);
+        header.push_back(packetid & 0xff);
+        header.push_back(global_src >> 8);
+        header.push_back(global_src & 0xff);
+        header.push_back(global_dst >> 8);
+        header.push_back(global_dst & 0xff);
+        header.push_back(flag);
+        header.push_back(fragment);
+        header.push_back(headchecksum >> 8);
+        header.push_back(headchecksum & 0xff);
+        header.push_back(protocol);
+        return header;
     }
 
     PacketError validate(void) const {
@@ -104,7 +138,8 @@ class Packet {
             // currently, unsupported
             return PacketError::UNSUPPORTED;
         }
-        if (data.size() > CONFIG_MTU) {
+        auto length = (data.size() - 1) * flit::CONFIG_MESSAGE_LENGTH + data.back().size();
+        if (length > CONFIG_MTU - 1) {
             return PacketError::OVER_MTU;
         }
         if (headchecksum != caluculate_checksum()) {

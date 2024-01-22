@@ -26,6 +26,7 @@ enum PacketError {
     INVALID_LENGTH,
     INVALID_CHECKSUM,
     INVALID_PROTOCOL,
+    INVALID_NOPE,
     NOT_END,
 
     // validation
