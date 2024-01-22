@@ -1,4 +1,5 @@
 #include "header.hpp"
+#include <cassert>
 namespace header {
 bool is_ack(Header &header) {
     switch (header) {

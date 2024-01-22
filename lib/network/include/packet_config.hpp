@@ -38,8 +38,8 @@ using fragment_t = uint8_t;
 using headchecksum_t = uint16_t;
 using protocol_t = uint8_t;
 
-using message_element_t = uint8_t;
-using message_buffer_t = std::vector<message_element_t>;
+using message_buffer_element_t = flit::message_t;
+using message_buffer_t = std::vector<message_buffer_element_t>;
 
 static_assert(sizeof(version_t) == CONFIG_VERSION_SIZE / 8);
 static_assert(sizeof(length_t) == CONFIG_LEN_FILED_SIZE / 8);
@@ -56,6 +56,5 @@ static_assert(sizeof(packetid_t) == sizeof(flit::packetid_t));
 static_assert(CONFIG_MTU <= flit::CONFIG_MESSAGE_SIZE * 1 << (flit::CONFIG_FLIT_ID_SIZE));
 static_assert(sizeof(src_t) == sizeof(flit::node_id_t));
 static_assert(sizeof(dst_t) == sizeof(flit::node_id_t));
-static_assert(sizeof(message_element_t) == sizeof(flit::message_element_t));
 
 }  // namespace packet

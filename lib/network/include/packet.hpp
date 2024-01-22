@@ -6,7 +6,7 @@
 #include "routing.hpp"
 
 #include <algorithm>
-#include <variant>
+#include <expected>
 #include <optional>
 
 namespace packet {
@@ -54,11 +54,11 @@ class Packet {
             return false;
         }
         // EOF
-        data.push_back(flit::FLIT_EOF);
-        auto rem = data.size() % flit::CONFIG_MESSAGE_LENGTH;
+        data.back().push_back(flit::FLIT_EOF);
+        auto rem = data.back().size() % flit::CONFIG_MESSAGE_LENGTH;
         if (rem != 0) {
             // push 0 to last
-            data.insert(data.end(), flit::CONFIG_MESSAGE_LENGTH - rem, 0);
+            data.back().insert(data.back().end(), flit::CONFIG_MESSAGE_LENGTH - rem, 0);
         }
         flit_length = data.size() / flit::CONFIG_MESSAGE_LENGTH;
         is_ready = true;
@@ -117,8 +117,9 @@ class Packet {
     }
 
     // load flit one by one
-    PacketError to_flit(Flit &flit, const src_t &this_id, const network::Routing &routing);
-    PacketError load_flit(Flit &&flit);
+    std::expected<std::unique_ptr<Flit>, PacketError> to_flit(const src_t &this_id,
+                                                              const network::Routing &routing) noexcept;
+    PacketError load_flit(Flit &&flit) noexcept;
 
     bool operator<(const Packet &rhs) const {
         if (packetid != rhs.packetid) {
