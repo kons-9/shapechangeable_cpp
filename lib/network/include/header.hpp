@@ -1,7 +1,6 @@
 #pragma once
-#include "config.hpp"
 
-#include <cassert>
+#include "config.hpp"
 
 namespace header {
 enum class Header : header_t {
@@ -10,15 +9,6 @@ enum class Header : header_t {
     Ack,
 };
 
-bool is_ack(Header &header) {
-    switch (header) {
-    case Header::None:
-    case Header::Data: return false;
-    case Header::Ack: return true;
-    default:  // unreachable
-        break;
-    };
-    assert(false);
-}
+bool is_ack(Header &header);
 
 }  // namespace header

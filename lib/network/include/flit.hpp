@@ -9,6 +9,7 @@
 #include <optional>
 #include <variant>
 #include <memory>
+#include <expected>
 
 namespace flit {
 using Header = header::Header;
@@ -35,7 +36,7 @@ class Flit {
     virtual ~Flit() = default;
 };
 
-class NopeFlit : Flit {
+class NopeFlit : public Flit {
 #if CFG_TEST_PUBLIC == true
   public:
 #endif
@@ -72,7 +73,7 @@ class NopeFlit : Flit {
     };
 };
 
-class HeadFlit : Flit {
+class HeadFlit : public Flit {
 #if CFG_TEST_PUBLIC == true
   public:
 #endif
@@ -134,7 +135,7 @@ class HeadFlit : Flit {
     };
 };
 
-class BodyFlit : Flit {
+class BodyFlit : public Flit {
 #if CFG_TEST_PUBLIC == true
   public:
 #endif
@@ -172,7 +173,7 @@ class BodyFlit : Flit {
     };
 };
 
-class TailFlit : Flit {
+class TailFlit : public Flit {
 #if CFG_TEST_PUBLIC == true
   public:
 #endif
@@ -209,7 +210,6 @@ class TailFlit : Flit {
     };
 };
 
-// TODO: std::uniqueptr を使う
-std::variant<FlitError, HeadFlit, BodyFlit, TailFlit, NopeFlit> decoder(raw_data_t &raw_data);
+std::expected<std::unique_ptr<Flit>, FlitError> decoder(raw_data_t &raw_data);
 
 }  // namespace flit

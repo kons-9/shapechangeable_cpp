@@ -39,6 +39,11 @@ enum PacketError {
 
     // to flit
     NOT_READY,
+    EXPECTED_HEAD,
+    EXPECTED_BODY,
+    EXPECTED_TAIL,
     ALREADY_FINISHED,
+    INVALID_FLIT_LENGTH,
+    INVALID_FLIT_UNKNOWN,  // treated as fatal error
 };
 }  // namespace packet
