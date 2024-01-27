@@ -3,6 +3,7 @@
 
 #include <ota.hpp>
 #include <estimation.hpp>
+#include <display.hpp>
 
 #include <esp_log.h>
 
@@ -11,7 +12,7 @@ constexpr static int16_t SCLK = 8;
 constexpr static int16_t MOSI = 10;
 constexpr static int16_t MISO = -1;
 constexpr static int16_t RST = 3;
-constexpr static int16_t CS = 5;
+constexpr static int16_t CS = -1;
 
 static constexpr gpio_num_t TX_PIN = GPIO_NUM_21;
 static constexpr gpio_num_t RX_PIN = GPIO_NUM_20;
@@ -19,8 +20,9 @@ static constexpr gpio_num_t RX_PIN = GPIO_NUM_20;
 const static char *TAG = "main";
 
 static physical::Uart uart(TX_PIN, RX_PIN);
+static display::LGFX lov_display(SCLK, MOSI, DC, CS, RST, MISO);
 
-static void main_task(void *args) {
+static void estimation_task(void *args) {
     auto coordinate = estimation::init_coordinate(uart);
     while (true) {
         coordinate = estimation::update_coordinate(coordinate);
@@ -47,5 +49,5 @@ extern "C" void app_main() {
 
     uart.uart_init();
 
-    xTaskCreate(main_task, "main_task", 4096, NULL, 1, NULL);
+    xTaskCreate(estimation_task, "main_task", 4096, NULL, 1, NULL);
 }

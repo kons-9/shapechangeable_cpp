@@ -1,7 +1,14 @@
 #include "display.hpp"
 #include "fs.hpp"
 
-display::LGFX lov_display;
+constexpr static int16_t DC = 4;
+constexpr static int16_t SCLK = 8;
+constexpr static int16_t MOSI = 10;
+constexpr static int16_t MISO = -1;
+constexpr static int16_t RST = 3;
+constexpr static int16_t CS = 5;
+
+static display::LGFX lov_display(SCLK, MOSI, DC, CS, RST, MISO);
 fs::SpiFFS spiffs;
 uint16_t image[128 * 128 + 1];
 
