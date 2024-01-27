@@ -1,4 +1,5 @@
 #pragma once
+#include "concepts.hpp"
 
 #include "packet_config.hpp"
 #include "error.hpp"
@@ -8,6 +9,7 @@
 #include <algorithm>
 #include <expected>
 #include <optional>
+
 
 namespace packet {
 using Flit = flit::Flit;
@@ -152,9 +154,34 @@ class Packet {
     }
 
     // load flit one by one
-    std::expected<std::unique_ptr<Flit>, PacketError> to_flit(const src_t &this_id,
+    std::expected<std::unique_ptr<Flit>, PacketError> to_flit(const src_t this_id,
                                                               const network::Routing &routing) noexcept;
-    PacketError load_flit(Flit &&flit) noexcept;
+    PacketError load_flit(std::unique_ptr<flit::Flit> &&flit) noexcept;
+
+    template <sender T> PacketError send(T &sender, const flit::node_id_t this_id, const network::Routing &routing) {
+        // send all flits
+        while (true) {
+            auto flit = to_flit(this_id, routing);
+            auto is_success = flit.has_value();
+            if (!is_success) {
+                return flit.error();
+            }
+            auto flit_ptr = std::move(flit.value());
+            flit_ptr->send(sender);
+        }
+        return PacketError::OK;
+    }
+
+    template <receiver T> bool receive(T &receiver) {
+        while (true) {
+            std::unique_ptr<flit::Flit> flit = flit::receive(receiver);
+            auto err = load_flit(std::move(flit));
+            if (err != PacketError::OK) {
+                return false;
+            }
+        }
+    }
+
 
     bool operator<(const Packet &rhs) const {
         if (packetid != rhs.packetid) {

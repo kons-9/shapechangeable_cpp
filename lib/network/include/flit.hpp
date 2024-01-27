@@ -1,6 +1,5 @@
 #pragma once
 #include "config.hpp"
-#include "raw_data.hpp"
 #include "error.hpp"
 #include "header.hpp"
 #include "packet_config.hpp"
@@ -11,8 +10,16 @@
 #include <memory>
 #include <expected>
 
+#include <physical.hpp>
+#include <concepts.hpp>
+
 namespace flit {
 using Header = header::Header;
+
+std::optional<raw_data_t> uart_read(char *data, std::size_t size);
+static constexpr node_id_t BROADCAST_ADDRESS = std::numeric_limits<node_id_t>::max();
+static constexpr packetid_t SYSTEM_PACKET_ID = 0;
+
 
 enum class FlitType : flittype_t {
     Nope = 0,
@@ -20,6 +27,7 @@ enum class FlitType : flittype_t {
     Body,
     Tail,
 };
+
 
 class Flit {
 #if CFG_TEST_PUBLIC == true
@@ -33,6 +41,18 @@ class Flit {
     virtual std::optional<message_t> get_data(void) = 0;
     virtual std::optional<flitid_t> get_id(void) const = 0;
     virtual void to_rawdata(raw_data_t &raw_data) const = 0;
+    bool send(physical::Uart &uart) const {
+        raw_data_t raw_data;
+        to_rawdata(raw_data);
+        uart.uart_send(raw_data.size(), (char *)raw_data.data());
+        return true;
+    }
+    template <sender T> SendError send(T &sender) const {
+        raw_data_t raw_data;
+        to_rawdata(raw_data);
+        // todo: automatically ack
+        return sender.send(raw_data);
+    }
     virtual ~Flit() = default;
 };
 
@@ -231,5 +251,16 @@ class TailFlit : public Flit {
 };
 
 std::expected<std::unique_ptr<Flit>, FlitError> decoder(raw_data_t &raw_data);
+template <typename T> std::unique_ptr<T> static_pointer_cast(std::unique_ptr<flit::Flit> &&ptr) {
+    return std::unique_ptr<T>(static_cast<T *>(ptr.release()));
+}
+template <receiver T> static std::unique_ptr<Flit> receive(T &receiver) {
+    raw_data_t raw_data;
+    auto err = receiver.receive(raw_data);
+    if (!err) {
+        return nullptr;
+    }
+    return decoder(raw_data).value();
+}
 
 }  // namespace flit

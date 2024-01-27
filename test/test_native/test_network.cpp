@@ -10,11 +10,6 @@
 #include "config.hpp"
 #include "flit.hpp"
 
-// used for only test
-template <typename T> std::unique_ptr<T> static_pointer_cast(std::unique_ptr<flit::Flit> &&ptr) {
-    return std::unique_ptr<T>(static_cast<T *>(ptr.release()));
-}
-
 TEST(Flit, HeadFlit) {
     {
         flit::HeadFlit flit(1, flit::Header::None, 12, 3, 5);

@@ -1,4 +1,7 @@
 #include "packet.hpp"
+
+#include "flit.hpp"
+
 #include <variant>
 #include <cassert>
 #include <expected>
@@ -22,7 +25,7 @@ headchecksum_t Packet::caluculate_checksum() const {
     return checksum;
 }
 
-std::expected<std::unique_ptr<Flit>, PacketError> Packet::to_flit(const src_t &this_id,
+std::expected<std::unique_ptr<Flit>, PacketError> Packet::to_flit(const flit::node_id_t this_id,
                                                                   const network::Routing &routing) noexcept {
     if (current_flit_index == 0) {
         current_flit_index++;
@@ -67,17 +70,17 @@ std::expected<std::unique_ptr<Flit>, PacketError> Packet::to_flit(const src_t &t
     }
 }
 
-PacketError Packet::load_flit(Flit &&flit) {
+PacketError Packet::load_flit(std::unique_ptr<flit::Flit> &&flit) {
     // todo
-    switch (flit.get_type()) {
+    switch (flit->get_type()) {
     case FlitType::Head: {
-        if (flit.validate() != FlitError::OK) {
+        if (flit->validate() != FlitError::OK) {
             return PacketError::INVALID_FLIT_UNKNOWN;
         }
 
-        auto head = static_cast<flit::HeadFlit &&>(flit);
+        auto head = static_pointer_cast<flit::HeadFlit>(std::move(flit));
 
-        auto flit_length = head.get_length();
+        auto flit_length = head->get_length();
         data.resize(flit_length);
 
         break;
@@ -85,11 +88,15 @@ PacketError Packet::load_flit(Flit &&flit) {
     case FlitType::Body:
     case FlitType::Tail: {
         // TODO if tail, remove eof
-        auto flitid = flit.get_id();
+        auto flitid = flit->get_id();
         assert(flitid.has_value());
         auto id = flitid.value();
         assert(id - 1 < data.size());
-        auto flit_data = flit.get_data();
+        if (data[id - 1].size() == flit::CONFIG_MESSAGE_LENGTH) {
+            // already full
+            return PacketError::ALREADY_FULL;
+        }
+        auto flit_data = flit->get_data();
         assert(flit_data.has_value());
         data[id - 1] = std::move(flit_data.value());
         break;
