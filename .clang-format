@@ -20,7 +20,7 @@ AllowShortEnumsOnASingleLine: false
 # Ew, no.
 AlwaysBreakAfterDefinitionReturnType: false
 # Not mandatory...
-AlwaysBreakTemplateDeclarations: false
+AlwaysBreakTemplateDeclarations: true
 # Readability:
 AlwaysBreakBeforeMultilineStrings: true
 # Nice...

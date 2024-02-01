@@ -1,6 +1,6 @@
 #include "flit.hpp"
 
-namespace flit {
+namespace network {
 void NopeFlit::to_rawdata(raw_data_t &raw_data) const {
     raw_data[0] = static_cast<uint8_t>(version);
     raw_data[1] = static_cast<uint8_t>(FlitType::Nope);
@@ -8,18 +8,18 @@ void NopeFlit::to_rawdata(raw_data_t &raw_data) const {
     raw_data[14] = checksum >> 8;
     raw_data[15] = checksum & 0xff;
 };
-FlitError HeadFlit::validate() const {
+NetworkError HeadFlit::validate() const {
     if (version != CONFIG_CURRENT_VERSION) {
-        return FlitError::INVALID_VERSION;
+        return NetworkError::INVALID_VERSION;
     }
     if (length > CONFIG_MESSAGE_LENGTH) {
-        return FlitError::INVALID_LENGTH;
+        return NetworkError::INVALID_LENGTH;
     }
     checksum_t cur_checksum = culculate_checksum();
     if (checksum != cur_checksum) {
-        return FlitError::INVALID_CHECKSUM;
+        return NetworkError::INVALID_CHECKSUM;
     }
-    return FlitError::OK;
+    return NetworkError::OK;
 }
 checksum_t HeadFlit::culculate_checksum() const {
     checksum_t checksum = 0;
@@ -51,18 +51,18 @@ void HeadFlit::to_rawdata(raw_data_t &raw_data) const {
     raw_data[15] = checksum & 0xff;
 };
 
-FlitError BodyFlit::validate() const {
+NetworkError BodyFlit::validate() const {
     if (version != CONFIG_CURRENT_VERSION) {
-        return FlitError::INVALID_VERSION;
+        return NetworkError::INVALID_VERSION;
     }
     if (id > CONFIG_MESSAGE_LENGTH) {
-        return FlitError::INVALID_LENGTH;
+        return NetworkError::INVALID_LENGTH;
     }
     checksum_t cur_checksum = culculate_checksum();
     if (checksum != cur_checksum) {
-        return FlitError::INVALID_CHECKSUM;
+        return NetworkError::INVALID_CHECKSUM;
     }
-    return FlitError::OK;
+    return NetworkError::OK;
 }
 checksum_t BodyFlit::culculate_checksum() const {
     checksum_t checksum = 0;
@@ -85,18 +85,18 @@ void BodyFlit::to_rawdata(raw_data_t &raw_data) const {
     raw_data[15] = checksum & 0xff;
 };
 
-FlitError TailFlit::validate() const {
+NetworkError TailFlit::validate() const {
     if (version != CONFIG_CURRENT_VERSION) {
-        return FlitError::INVALID_VERSION;
+        return NetworkError::INVALID_VERSION;
     }
     if (id > CONFIG_MESSAGE_LENGTH) {
-        return FlitError::INVALID_LENGTH;
+        return NetworkError::INVALID_LENGTH;
     }
     checksum_t cur_checksum = culculate_checksum();
     if (checksum != cur_checksum) {
-        return FlitError::INVALID_CHECKSUM;
+        return NetworkError::INVALID_CHECKSUM;
     }
-    return FlitError::OK;
+    return NetworkError::OK;
 }
 checksum_t TailFlit::culculate_checksum() const {
     checksum_t checksum = 0;
@@ -119,7 +119,7 @@ void TailFlit::to_rawdata(raw_data_t &raw_data) const {
     raw_data[15] = checksum & 0xff;
 };
 
-std::expected<std::unique_ptr<Flit>, FlitError> decoder(raw_data_t &raw_data) {
+std::expected<std::unique_ptr<Flit>, NetworkError> decoder(raw_data_t &raw_data) {
     auto version = raw_data[0];
     auto type = static_cast<FlitType>(raw_data[1]);
     auto checksum = raw_data[14] << 8 | raw_data[15];
@@ -127,8 +127,8 @@ std::expected<std::unique_ptr<Flit>, FlitError> decoder(raw_data_t &raw_data) {
     switch (type) {
     case FlitType::Head: {
         // version:8:flittype:8:nodeid:16:nodeid:16:packetid:16:flitid:16:header:16:option:16:checksum:16
-        node_id_t src = raw_data[2] << 8 | raw_data[3];
-        node_id_t dst = raw_data[4] << 8 | raw_data[5];
+        ip_address_t src = raw_data[2] << 8 | raw_data[3];
+        ip_address_t dst = raw_data[4] << 8 | raw_data[5];
         packetid_t packetid = raw_data[6] << 8 | raw_data[7];
         flitid_t length = raw_data[8] << 8 | raw_data[9];
         Header header = static_cast<Header>(raw_data[10] << 8 | raw_data[11]);
@@ -155,8 +155,8 @@ std::expected<std::unique_ptr<Flit>, FlitError> decoder(raw_data_t &raw_data) {
     case FlitType::Nope: {
         return std::make_unique<NopeFlit>(version, checksum);
     }
-    default: return std::unexpected(FlitError::INVALID_TYPE);
+    default: return std::unexpected(NetworkError::INVALID_TYPE);
     }
 };
 
-}  // namespace flit
+}  // namespace network

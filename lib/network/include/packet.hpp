@@ -1,18 +1,16 @@
 #pragma once
-#include "concepts.hpp"
-
-#include "packet_config.hpp"
-#include "error.hpp"
+#include "types.hpp"
 #include "flit.hpp"
 #include "routing.hpp"
+
+#include <concepts.hpp>
 
 #include <algorithm>
 #include <expected>
 #include <optional>
 
 
-namespace packet {
-using Flit = flit::Flit;
+namespace network {
 
 enum class Protocol : protocol_t {
     DEFAULT,
@@ -33,21 +31,22 @@ class Packet {
     length_t head_length;
     priority_t priority;
     packetid_t packetid;
-    src_t global_src;
-    dst_t global_dst;
+    ip_address_t global_src;
+    ip_address_t global_dst;
     flag_t flag;
     fragment_t fragment;
     protocol_t protocol;
     // must be last since this use all varialble in initilization
     headchecksum_t headchecksum;
+    Header header;
 
     message_buffer_t data;
 
     headchecksum_t caluculate_checksum() const;
 
-    flit::flitid_t current_flit_index = 0;
+    flitid_t current_flit_index = 0;
     bool ready() {
-        if (data.size() > CONFIG_MTU - 1) {
+        if (data.size() > packet::CONFIG_MTU - 1) {
             return false;
         }
         // EOF
@@ -67,15 +66,34 @@ class Packet {
     fragment_t get_fragment() const {
         return fragment;
     }
-    message_buffer_t &&get_data() {
-        return std::move(data);
+    std::vector<message_element_t> get_data() {
+        std::vector<message_element_t> data;
+        // move all data
+        for (auto &flit : this->data) {
+            std::move(flit.begin(), flit.end(), std::back_inserter(data));
+        }
+        this->data.clear();
+
+        return data;
+    }
+    Header get_header() const {
+        return header;
+    }
+
+    ip_address_t get_src() const {
+        return global_src;
     }
     // for load flit
     Packet() = default;
     /// @brief make a packet from flits
     /// donot check flits are valid
-    Packet(length_t head_length, priority_t priority, packetid_t packetid, src_t src, dst_t dst, flag_t flag)
-        : version(CONFIG_CURRENT_VERSION)
+    Packet(length_t head_length,
+           priority_t priority,
+           packetid_t packetid,
+           ip_address_t src,
+           ip_address_t dst,
+           flag_t flag)
+        : version(packet::CONFIG_CURRENT_VERSION)
         , head_length(head_length)
         , priority(priority)
         , packetid(packetid)
@@ -84,16 +102,20 @@ class Packet {
         , flag(flag)
         , fragment(0)
         , protocol(static_cast<protocol_t>(Protocol::DEFAULT))
-        , data(){};
+        , headchecksum(caluculate_checksum())
+        , header(Header::Data) {
+        auto header = make_header();
+        data.push_back(std::move(header));
+    };
 
     Packet(length_t head_length,
            priority_t priority,
            packetid_t packetid,
-           src_t src,
-           dst_t dst,
+           ip_address_t src,
+           ip_address_t dst,
            flag_t flag,
-           std::vector<flit::message_element_t> &message)
-        : version(CONFIG_CURRENT_VERSION)
+           std::vector<message_element_t> &message)
+        : version(packet::CONFIG_CURRENT_VERSION)
         , head_length(head_length)
         , priority(priority)
         , packetid(packetid)
@@ -113,11 +135,11 @@ class Packet {
         for (auto i = 0; i < message.size(); i += flit::CONFIG_MESSAGE_LENGTH) {
             auto begin = message.begin() + i;
             auto end = message.begin() + std::min(i + flit::CONFIG_MESSAGE_LENGTH, message.size());
-            data.push_back(std::vector<flit::message_element_t>(begin, end));
+            data.push_back(std::vector<message_element_t>(begin, end));
         }
     }
-    std::vector<flit::message_element_t> make_header() const {
-        std::vector<flit::message_element_t> header;
+    std::vector<message_element_t> make_header() const {
+        std::vector<message_element_t> header;
         header.push_back(version);
         header.push_back(head_length);
         header.push_back(priority);
@@ -135,30 +157,31 @@ class Packet {
         return header;
     }
 
-    PacketError validate(void) const {
+    NetworkError validate(void) const {
         if (flag & HASFRAGMENT || flag & LASTFRAGMENT || fragment != 0) {
             // currently, unsupported
-            return PacketError::UNSUPPORTED;
+            return NetworkError::UNSUPPORTED;
         }
         auto length = (data.size() - 1) * flit::CONFIG_MESSAGE_LENGTH + data.back().size();
-        if (length > CONFIG_MTU - 1) {
-            return PacketError::OVER_MTU;
+        if (length > packet::CONFIG_MTU - 1) {
+            return NetworkError::OVER_MTU;
         }
         if (headchecksum != caluculate_checksum()) {
-            return PacketError::CHECKSUM_NOT_MATCH;
+            return NetworkError::CHECKSUM_NOT_MATCH;
         }
-        if (version > CONFIG_CURRENT_VERSION) {
-            return PacketError::VERSION_UNSUPPORTED;
+        if (version > packet::CONFIG_CURRENT_VERSION) {
+            return NetworkError::VERSION_UNSUPPORTED;
         }
-        return PacketError::OK;
+        return NetworkError::OK;
     }
 
     // load flit one by one
-    std::expected<std::unique_ptr<Flit>, PacketError> to_flit(const src_t this_id,
-                                                              const network::Routing &routing) noexcept;
-    PacketError load_flit(std::unique_ptr<flit::Flit> &&flit) noexcept;
+    std::expected<std::unique_ptr<Flit>, NetworkError> to_flit(const ip_address_t this_id,
+                                                               const Routing &routing) noexcept;
+    NetworkError load_flit(std::unique_ptr<Flit> &&flit) noexcept;
 
-    template <sender T> PacketError send(T &sender, const flit::node_id_t this_id, const network::Routing &routing) {
+    template <traits::serial T>
+    NetworkError send(T &sender, const ip_address_t this_id, const network::Routing &routing) {
         // send all flits
         while (true) {
             auto flit = to_flit(this_id, routing);
@@ -169,14 +192,14 @@ class Packet {
             auto flit_ptr = std::move(flit.value());
             flit_ptr->send(sender);
         }
-        return PacketError::OK;
+        return NetworkError::OK;
     }
 
-    template <receiver T> bool receive(T &receiver) {
+    template <traits::serial T> bool receive(T &receiver) {
         while (true) {
-            std::unique_ptr<flit::Flit> flit = flit::receive(receiver);
+            std::unique_ptr<Flit> flit = receive(receiver);
             auto err = load_flit(std::move(flit));
-            if (err != PacketError::OK) {
+            if (err != NetworkError::OK) {
                 return false;
             }
         }
@@ -192,4 +215,4 @@ class Packet {
     }
 };
 
-}  // namespace packet
+}  // namespace network

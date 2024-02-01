@@ -1,14 +1,16 @@
 #pragma once
 
-#include "config.hpp"
+#include <config/basic_types.hpp>
 
-namespace header {
+namespace network {
+
 enum class Header : header_t {
     None = 0,
     Data,
     COORDINATE_ESTIMATION,
+    COORDINATE_ESTIMATION_RSP,
 };
 
 bool is_ack(Header &header);
 
-}  // namespace header
+}  // namespace network

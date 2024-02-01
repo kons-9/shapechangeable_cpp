@@ -1,14 +1,17 @@
 #include "header.hpp"
+
 #include <cassert>
-namespace header {
+
+namespace network {
 bool is_ack(Header &header) {
     switch (header) {
     case Header::None:
     case Header::Data:
-    case Header::COORDINATE_ESTIMATION: return false;
+    case Header::COORDINATE_ESTIMATION:
+    case Header::COORDINATE_ESTIMATION_RSP: return false;
     default:  // unreachable
         break;
     };
     assert(false);
 }
-}  // namespace header
+}  // namespace network

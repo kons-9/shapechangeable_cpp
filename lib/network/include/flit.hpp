@@ -1,8 +1,5 @@
 #pragma once
-#include "config.hpp"
-#include "error.hpp"
-#include "header.hpp"
-#include "packet_config.hpp"
+#include "types.hpp"
 
 #include <cstdint>
 #include <optional>
@@ -10,15 +7,12 @@
 #include <memory>
 #include <expected>
 
-#include <physical.hpp>
 #include <concepts.hpp>
 
-namespace flit {
-using Header = header::Header;
+namespace network {
+using namespace flit;
 
 std::optional<raw_data_t> uart_read(char *data, std::size_t size);
-static constexpr node_id_t BROADCAST_ADDRESS = std::numeric_limits<node_id_t>::max();
-static constexpr packetid_t SYSTEM_PACKET_ID = 0;
 
 
 enum class FlitType : flittype_t {
@@ -37,17 +31,11 @@ class Flit {
   public:
     virtual checksum_t culculate_checksum() const = 0;
     virtual FlitType get_type(void) const = 0;
-    virtual FlitError validate(void) const = 0;
+    virtual NetworkError validate(void) const = 0;
     virtual std::optional<message_t> get_data(void) = 0;
     virtual std::optional<flitid_t> get_id(void) const = 0;
     virtual void to_rawdata(raw_data_t &raw_data) const = 0;
-    bool send(physical::Uart &uart) const {
-        raw_data_t raw_data;
-        to_rawdata(raw_data);
-        uart.uart_send(raw_data.size(), (char *)raw_data.data());
-        return true;
-    }
-    template <sender T> SendError send(T &sender) const {
+    template <traits::serial T> traits::SerialError send(T &sender) const {
         raw_data_t raw_data;
         to_rawdata(raw_data);
         // todo: automatically ack
@@ -65,7 +53,7 @@ class NopeFlit : public Flit {
 
   public:
     NopeFlit()
-        : version(CONFIG_CURRENT_VERSION)
+        : version(flit::CONFIG_CURRENT_VERSION)
         , checksum(0){};
 
     NopeFlit(const version_t &version, const checksum_t &checksum)
@@ -78,8 +66,8 @@ class NopeFlit : public Flit {
     FlitType get_type(void) const override {
         return FlitType::Nope;
     };
-    FlitError validate(void) const override {
-        return FlitError::OK;
+    NetworkError validate(void) const override {
+        return NetworkError::OK;
     };
     std::optional<message_t> get_data(void) override {
         return std::nullopt;
@@ -100,8 +88,8 @@ class HeadFlit : public Flit {
     version_t version;
     flitid_t length;
     Header header;
-    node_id_t src;
-    node_id_t dst;
+    ip_address_t src;
+    ip_address_t dst;
     packetid_t packetid;
     option_t option;
     checksum_t checksum;
@@ -110,8 +98,8 @@ class HeadFlit : public Flit {
     HeadFlit(const flitid_t &length,
              const Header &header,
              const packetid_t &packetid,
-             const node_id_t &src,
-             const node_id_t &dst)
+             const ip_address_t &src,
+             const ip_address_t &dst)
         : version(CONFIG_CURRENT_VERSION)
         , length(length)
         , header(header)
@@ -125,8 +113,8 @@ class HeadFlit : public Flit {
              const flitid_t &length,
              const Header &header,
              const packetid_t &packetid,
-             const node_id_t &src,
-             const node_id_t &dst,
+             const ip_address_t &src,
+             const ip_address_t &dst,
              const option_t &option,
              const checksum_t &checksum)
         : version(version)
@@ -141,7 +129,7 @@ class HeadFlit : public Flit {
     FlitType get_type(void) const override {
         return FlitType::Head;
     };
-    FlitError validate(void) const override;
+    NetworkError validate(void) const override;
     std::optional<message_t> get_data(void) override {
         return std::nullopt;
     };
@@ -155,10 +143,10 @@ class HeadFlit : public Flit {
     flitid_t get_length() const {
         return length;
     }
-    node_id_t get_src() const {
+    ip_address_t get_src() const {
         return src;
     }
-    node_id_t get_dst() const {
+    ip_address_t get_dst() const {
         return dst;
     }
     Header get_header() const {
@@ -200,7 +188,7 @@ class BodyFlit : public Flit {
     FlitType get_type(void) const override {
         return FlitType::Body;
     };
-    FlitError validate(void) const override;
+    NetworkError validate(void) const override;
     std::optional<message_t> get_data(void) override {
         return data;
     };
@@ -237,7 +225,7 @@ class TailFlit : public Flit {
     FlitType get_type(void) const override {
         return FlitType::Tail;
     };
-    FlitError validate(void) const override;
+    NetworkError validate(void) const override;
     std::optional<message_t> get_data(void) override {
         return std::move(data);
     };
@@ -250,11 +238,11 @@ class TailFlit : public Flit {
     };
 };
 
-std::expected<std::unique_ptr<Flit>, FlitError> decoder(raw_data_t &raw_data);
-template <typename T> std::unique_ptr<T> static_pointer_cast(std::unique_ptr<flit::Flit> &&ptr) {
+std::expected<std::unique_ptr<Flit>, NetworkError> decoder(raw_data_t &raw_data);
+template <typename T> std::unique_ptr<T> static_pointer_cast(std::unique_ptr<Flit> &&ptr) {
     return std::unique_ptr<T>(static_cast<T *>(ptr.release()));
 }
-template <receiver T> static std::unique_ptr<Flit> receive(T &receiver) {
+template <traits::serial T> static std::unique_ptr<Flit> receive(T &receiver) {
     raw_data_t raw_data;
     auto err = receiver.receive(raw_data);
     if (!err) {
@@ -263,4 +251,4 @@ template <receiver T> static std::unique_ptr<Flit> receive(T &receiver) {
     return decoder(raw_data).value();
 }
 
-}  // namespace flit
+}  // namespace network
