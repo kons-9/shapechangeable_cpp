@@ -20,6 +20,9 @@ enum NetworkError {
     RECEIVE_ERROR = 100,
     DECODER_ERROR,
     HEAD_FLIT_ERROR,
+    INVALID_DESTINATION,
+    INVALID_ID,
+    INVALID_TAIL,
 
     // for flit
     INVALID_FLIT_CONFIG_HEAD = 1,

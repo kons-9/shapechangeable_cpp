@@ -47,6 +47,7 @@ static constexpr std::size_t CONFIG_FLAG_SIZE = 8;
 static constexpr std::size_t CONFIG_FRAGMENT_SIZE = 8;
 static constexpr std::size_t CONFIG_HEAD_CHECKSUM_SIZE = 16;
 static constexpr std::size_t CONFIG_PROTOCOL_SIZE = 8;
+static constexpr std::size_t CONFIG_NORMAL_HEADER_SIZE = 14;
 
 // byte size
 // must be multiple of flit::CONFIG_MESSAGE_LENGTH

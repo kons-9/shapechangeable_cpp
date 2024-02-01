@@ -119,7 +119,7 @@ void TailFlit::to_rawdata(raw_data_t &raw_data) const {
     raw_data[15] = checksum & 0xff;
 };
 
-std::expected<std::unique_ptr<Flit>, NetworkError> decoder(raw_data_t &raw_data) {
+std::expected<Flit, NetworkError> decoder(raw_data_t &raw_data) {
     auto version = raw_data[0];
     auto type = static_cast<FlitType>(raw_data[1]);
     auto checksum = raw_data[14] << 8 | raw_data[15];
@@ -133,7 +133,7 @@ std::expected<std::unique_ptr<Flit>, NetworkError> decoder(raw_data_t &raw_data)
         flitid_t length = raw_data[8] << 8 | raw_data[9];
         Header header = static_cast<Header>(raw_data[10] << 8 | raw_data[11]);
         option_t option = raw_data[12] << 8 | raw_data[13];
-        return std::make_unique<HeadFlit>(version, length, header, packetid, src, dst, option, checksum);
+        return HeadFlit(version, length, header, packetid, src, dst, option, checksum);
     }
     case FlitType::Body: {
         // version:8:flittype:8:flitid:16:message:80:checksum:16
@@ -142,7 +142,7 @@ std::expected<std::unique_ptr<Flit>, NetworkError> decoder(raw_data_t &raw_data)
             data[i] = raw_data[i + 4];
         }
         flitid_t id = raw_data[2] << 8 | raw_data[3];
-        return std::make_unique<BodyFlit>(version, id, std::move(data), checksum);
+        return BodyFlit(version, id, std::move(data), checksum);
     }
     case FlitType::Tail: {
         auto data = message_t(CONFIG_MESSAGE_LENGTH);
@@ -150,10 +150,10 @@ std::expected<std::unique_ptr<Flit>, NetworkError> decoder(raw_data_t &raw_data)
             data[i] = raw_data[i + 4];
         }
         flitid_t id = raw_data[2] << 8 | raw_data[3];
-        return std::make_unique<TailFlit>(version, id, std::move(data), checksum);
+        return TailFlit(version, id, std::move(data), checksum);
     }
     case FlitType::Nope: {
-        return std::make_unique<NopeFlit>(version, checksum);
+        return NopeFlit(version, checksum);
     }
     default: return std::unexpected(NetworkError::INVALID_TYPE);
     }

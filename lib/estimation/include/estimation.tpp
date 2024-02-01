@@ -1,63 +1,65 @@
 #pragma once
-// #include "estimation.hpp"
+#include "estimation.hpp"
 // #include "estimation_types.hpp"
 
 #include <concepts.hpp>
 #include <_log.hpp>
+#include <optional>
+#include <types.hpp>
 
 namespace estimation {
 static const char *TAG = "estimation";
 
 template <traits::serial T>
 auto get_head_flit(network::raw_data_t &receive_raw_data, T &uart) -> std::optional<network::Packet> {
-    auto is_success = uart.receive(receive_raw_data);
-    if (!is_success) {
-        return std::nullopt;
-    }
-    auto deceded_data = network::decoder(receive_raw_data);
-    if (!deceded_data.has_value()) {
-        return std::nullopt;
-    }
-    auto flit = std::move(deceded_data.value());
-    if (flit->get_type() != network::FlitType::Head) {
-        return std::nullopt;
-    }
+    // auto is_success = uart.receive(receive_raw_data);
+    // if (!is_success) {
+    //     return std::nullopt;
+    // }
+    // auto deceded_data = network::decoder(receive_raw_data);
+    // if (!deceded_data.has_value()) {
+    //     return std::nullopt;
+    // }
+    // auto flit = std::move(deceded_data.value());
+    // if (!std::holds_alternative<network::HeadFlit>(flit) {
+    //     return std::nullopt;
+    // }
 
     auto packet = network::Packet();
-    auto is_last = flit->get_type() == network::FlitType::Tail;
-    auto err = packet.load_flit(std::move(flit));
-    if (err != network::NetworkError::OK) {
-        LOGE(TAG, "packet load flit error: %d", err);
-        return std::nullopt;
-    }
+    // auto is_last = std::holds_alternative<network::TailFlit>(flit);
+    // auto err = packet.load_flit(std::move(flit));
+    // if (err != network::NetworkError::OK) {
+    //     LOGE(TAG, "packet load flit error: %d", err);
+    //     return std::nullopt;
+    // }
 
     return packet;
 }
 template <traits::serial T>
 auto make_packet(network::Packet &packet, T &uart) -> network::NetworkError {
-    network::raw_data_t receive_raw_data;
-    auto is_last = false;
-    network::NetworkError err;
-    while (!is_last) {
-        auto is_success = uart.receive(receive_raw_data);
-        if (!is_success) {
-            return network::NetworkError::RECEIVE_ERROR;
-        }
-        auto deceded_data = network::decoder(receive_raw_data);
-        if (!deceded_data.has_value()) {
-            return network::NetworkError::DECODER_ERROR;
-        }
-        auto flit = std::move(deceded_data.value());
-        if (flit->get_type() == network::FlitType::Head) {
-            return network::NetworkError::HEAD_FLIT_ERROR;
-        }
-        is_last = flit->get_type() == network::FlitType::Tail;
-        err = packet.load_flit(std::move(flit));
-        if (err != network::NetworkError::OK) {
-            LOGE(TAG, "packet load flit error: %d", err);
-            return err;
-        }
-    }
+    // network::raw_data_t receive_raw_data;
+    // auto is_last = false;
+    // network::NetworkError err;
+    // while (!is_last) {
+    //     auto is_success = uart.receive(receive_raw_data);
+    //     if (!is_success) {
+    //         return network::NetworkError::RECEIVE_ERROR;
+    //     }
+    //     auto deceded_data = network::decoder(receive_raw_data);
+    //     if (!deceded_data.has_value()) {
+    //         return network::NetworkError::DECODER_ERROR;
+    //     }
+    //     auto flit = std::move(deceded_data.value());
+    //     if (std::holds_alternative<network::Headflit>(flit) {
+    //         return network::NetworkError::HEAD_FLIT_ERROR;
+    //     }
+    //     is_last = std::holds_alternative<network::TailFlit>(flit);
+    //     err = packet.load_flit(std::move(flit));
+    //     if (err != network::NetworkError::OK) {
+    //         LOGE(TAG, "packet load flit error: %d", err);
+    //         return err;
+    //     }
+    // }
     return network::NetworkError::OK;
 }
 

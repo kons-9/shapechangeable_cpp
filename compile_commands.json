@@ -1,0 +1,620 @@
+[
+    {
+        "command": "/usr/bin/gcc -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/Fonts/IPA/lgfx_font_japan.o -c -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/Fonts/IPA/lgfx_font_japan.c",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/Fonts/IPA/lgfx_font_japan.c",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/Fonts/IPA/lgfx_font_japan.o"
+    },
+    {
+        "command": "/usr/bin/gcc -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/Fonts/efont/lgfx_efont_cn.o -c -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/Fonts/efont/lgfx_efont_cn.c",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/Fonts/efont/lgfx_efont_cn.c",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/Fonts/efont/lgfx_efont_cn.o"
+    },
+    {
+        "command": "/usr/bin/gcc -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/Fonts/efont/lgfx_efont_ja.o -c -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/Fonts/efont/lgfx_efont_ja.c",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/Fonts/efont/lgfx_efont_ja.c",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/Fonts/efont/lgfx_efont_ja.o"
+    },
+    {
+        "command": "/usr/bin/gcc -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/Fonts/efont/lgfx_efont_kr.o -c -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/Fonts/efont/lgfx_efont_kr.c",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/Fonts/efont/lgfx_efont_kr.c",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/Fonts/efont/lgfx_efont_kr.o"
+    },
+    {
+        "command": "/usr/bin/gcc -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/Fonts/efont/lgfx_efont_tw.o -c -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/Fonts/efont/lgfx_efont_tw.c",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/Fonts/efont/lgfx_efont_tw.c",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/Fonts/efont/lgfx_efont_tw.o"
+    },
+    {
+        "command": "/usr/bin/gcc -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/utility/lgfx_pngle.o -c -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/utility/lgfx_pngle.c",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/utility/lgfx_pngle.c",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/utility/lgfx_pngle.o"
+    },
+    {
+        "command": "/usr/bin/gcc -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/utility/lgfx_qoi.o -c -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/utility/lgfx_qoi.c",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/utility/lgfx_qoi.c",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/utility/lgfx_qoi.o"
+    },
+    {
+        "command": "/usr/bin/gcc -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/utility/lgfx_qrcode.o -c -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/utility/lgfx_qrcode.c",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/utility/lgfx_qrcode.c",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/utility/lgfx_qrcode.o"
+    },
+    {
+        "command": "/usr/bin/gcc -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/utility/lgfx_tjpgd.o -c -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/utility/lgfx_tjpgd.c",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/utility/lgfx_tjpgd.c",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/utility/lgfx_tjpgd.o"
+    },
+    {
+        "command": "/usr/bin/gcc -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/utility/miniz.o -c -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/utility/miniz.c",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/utility/miniz.c",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/utility/miniz.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/LGFXBase.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v0/LGFXBase.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v0/LGFXBase.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/LGFXBase.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/lgfx_fonts.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v0/lgfx_fonts.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v0/lgfx_fonts.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/lgfx_fonts.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/panel/Panel_GDEW0154M09.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v0/panel/Panel_GDEW0154M09.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v0/panel/Panel_GDEW0154M09.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/panel/Panel_GDEW0154M09.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/panel/Panel_IT8951.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v0/panel/Panel_IT8951.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v0/panel/Panel_IT8951.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/panel/Panel_IT8951.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/platforms/esp32_common.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v0/platforms/esp32_common.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v0/platforms/esp32_common.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/platforms/esp32_common.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/platforms/samd51_common.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v0/platforms/samd51_common.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v0/platforms/samd51_common.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/platforms/samd51_common.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/touch/Touch_FT5x06.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v0/touch/Touch_FT5x06.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v0/touch/Touch_FT5x06.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/touch/Touch_FT5x06.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/touch/Touch_GT911.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v0/touch/Touch_GT911.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v0/touch/Touch_GT911.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/touch/Touch_GT911.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/touch/Touch_STMPE610.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v0/touch/Touch_STMPE610.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v0/touch/Touch_STMPE610.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/touch/Touch_STMPE610.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/touch/Touch_XPT2046.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v0/touch/Touch_XPT2046.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v0/touch/Touch_XPT2046.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v0/touch/Touch_XPT2046.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/LGFXBase.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/LGFXBase.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/LGFXBase.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/LGFXBase.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/LGFX_Button.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/LGFX_Button.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/LGFX_Button.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/LGFX_Button.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/LGFX_Sprite.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/LGFX_Sprite.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/LGFX_Sprite.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/LGFX_Sprite.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/lgfx_fonts.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/lgfx_fonts.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/lgfx_fonts.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/lgfx_fonts.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/misc/DividedFrameBuffer.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/misc/DividedFrameBuffer.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/misc/DividedFrameBuffer.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/misc/DividedFrameBuffer.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/misc/SpriteBuffer.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/misc/SpriteBuffer.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/misc/SpriteBuffer.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/misc/SpriteBuffer.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/misc/common_function.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/misc/common_function.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/misc/common_function.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/misc/common_function.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/misc/pixelcopy.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/misc/pixelcopy.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/misc/pixelcopy.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/misc/pixelcopy.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_Device.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_Device.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_Device.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_Device.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_FlexibleFrameBuffer.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_FlexibleFrameBuffer.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_FlexibleFrameBuffer.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_FlexibleFrameBuffer.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_FrameBufferBase.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_FrameBufferBase.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_FrameBufferBase.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_FrameBufferBase.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_GDEW0154M09.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_GDEW0154M09.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_GDEW0154M09.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_GDEW0154M09.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_HUB75.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_HUB75.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_HUB75.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_HUB75.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_HasBuffer.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_HasBuffer.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_HasBuffer.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_HasBuffer.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_ILI9225.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_ILI9225.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_ILI9225.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_ILI9225.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_IT8951.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_IT8951.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_IT8951.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_IT8951.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_LCD.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_LCD.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_LCD.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_LCD.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_M5HDMI.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_M5HDMI.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_M5HDMI.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_M5HDMI.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_M5UnitGLASS.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_M5UnitGLASS.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_M5UnitGLASS.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_M5UnitGLASS.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_M5UnitLCD.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_M5UnitLCD.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_M5UnitLCD.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_M5UnitLCD.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_NT35510.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_NT35510.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_NT35510.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_NT35510.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_RA8875.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_RA8875.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_RA8875.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_RA8875.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_RM68120.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_RM68120.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_RM68120.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_RM68120.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_SSD1306.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_SSD1306.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_SSD1306.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_SSD1306.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_SSD1327.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_SSD1327.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_SSD1327.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_SSD1327.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_SSD1331.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_SSD1331.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_SSD1331.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_SSD1331.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_SSD1351.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_SSD1351.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_SSD1351.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_SSD1351.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_SSD1963.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_SSD1963.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/panel/Panel_SSD1963.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/panel/Panel_SSD1963.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/arduino_default/Bus_SPI.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/arduino_default/Bus_SPI.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/arduino_default/Bus_SPI.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/arduino_default/Bus_SPI.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/arduino_default/Bus_Stream.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/arduino_default/Bus_Stream.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/arduino_default/Bus_Stream.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/arduino_default/Bus_Stream.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/arduino_default/common.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/arduino_default/common.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/arduino_default/common.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/arduino_default/common.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/Bus_HUB75.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/Bus_HUB75.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/Bus_HUB75.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/Bus_HUB75.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/Bus_I2C.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/Bus_I2C.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/Bus_I2C.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/Bus_I2C.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/Bus_Parallel8.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/Bus_Parallel8.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/Bus_Parallel8.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/Bus_Parallel8.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/Bus_SPI.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/Bus_SPI.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/Bus_SPI.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/Bus_SPI.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/Light_PWM.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/Light_PWM.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/Light_PWM.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/Light_PWM.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/Panel_CVBS.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/Panel_CVBS.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/Panel_CVBS.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/Panel_CVBS.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/common.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/common.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32/common.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32/common.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32c3/Bus_Parallel8.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32c3/Bus_Parallel8.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32c3/Bus_Parallel8.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32c3/Bus_Parallel8.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32s2/Bus_Parallel16.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32s2/Bus_Parallel16.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32s2/Bus_Parallel16.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32s2/Bus_Parallel16.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32s2/Bus_Parallel8.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32s2/Bus_Parallel8.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32s2/Bus_Parallel8.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32s2/Bus_Parallel8.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32s3/Bus_Parallel16.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32s3/Bus_Parallel16.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32s3/Bus_Parallel16.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32s3/Bus_Parallel16.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32s3/Bus_Parallel8.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32s3/Bus_Parallel8.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32s3/Bus_Parallel8.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32s3/Bus_Parallel8.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32s3/Bus_RGB.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32s3/Bus_RGB.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32s3/Bus_RGB.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32s3/Bus_RGB.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32s3/Panel_RGB.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32s3/Panel_RGB.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp32s3/Panel_RGB.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp32s3/Panel_RGB.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp8266/Bus_I2C.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp8266/Bus_I2C.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp8266/Bus_I2C.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp8266/Bus_I2C.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp8266/Bus_SPI.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp8266/Bus_SPI.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp8266/Bus_SPI.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp8266/Bus_SPI.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp8266/common.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp8266/common.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/esp8266/common.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/esp8266/common.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/framebuffer/Panel_fb.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/framebuffer/Panel_fb.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/framebuffer/Panel_fb.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/framebuffer/Panel_fb.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/framebuffer/common.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/framebuffer/common.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/framebuffer/common.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/framebuffer/common.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/opencv/Panel_OpenCV.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/opencv/Panel_OpenCV.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/opencv/Panel_OpenCV.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/opencv/Panel_OpenCV.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/opencv/common.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/opencv/common.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/opencv/common.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/opencv/common.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/rp2040/Bus_I2C.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/rp2040/Bus_I2C.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/rp2040/Bus_I2C.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/rp2040/Bus_I2C.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/rp2040/Bus_SPI.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/rp2040/Bus_SPI.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/rp2040/Bus_SPI.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/rp2040/Bus_SPI.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/rp2040/Light_PWM.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/rp2040/Light_PWM.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/rp2040/Light_PWM.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/rp2040/Light_PWM.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/rp2040/common.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/rp2040/common.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/rp2040/common.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/rp2040/common.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/samd21/Bus_I2C.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/samd21/Bus_I2C.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/samd21/Bus_I2C.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/samd21/Bus_I2C.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/samd21/Bus_SPI.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/samd21/Bus_SPI.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/samd21/Bus_SPI.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/samd21/Bus_SPI.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/samd21/common.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/samd21/common.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/samd21/common.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/samd21/common.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/samd51/Bus_I2C.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/samd51/Bus_I2C.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/samd51/Bus_I2C.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/samd51/Bus_I2C.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/samd51/Bus_SPI.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/samd51/Bus_SPI.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/samd51/Bus_SPI.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/samd51/Bus_SPI.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/samd51/common.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/samd51/common.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/samd51/common.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/samd51/common.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/sdl/Panel_sdl.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/sdl/Panel_sdl.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/sdl/Panel_sdl.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/sdl/Panel_sdl.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/sdl/common.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/sdl/common.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/sdl/common.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/sdl/common.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/spresense/Bus_SPI.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/spresense/Bus_SPI.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/spresense/Bus_SPI.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/spresense/Bus_SPI.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/spresense/common.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/spresense/common.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/spresense/common.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/spresense/common.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/stm32/Bus_SPI.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/stm32/Bus_SPI.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/stm32/Bus_SPI.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/stm32/Bus_SPI.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/stm32/common.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/stm32/common.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/platforms/stm32/common.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/platforms/stm32/common.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_CST816S.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_CST816S.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_CST816S.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_CST816S.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_FT5x06.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_FT5x06.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_FT5x06.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_FT5x06.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_GSLx680.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_GSLx680.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_GSLx680.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_GSLx680.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_GT911.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_GT911.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_GT911.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_GT911.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_NS2009.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_NS2009.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_NS2009.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_NS2009.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_STMPE610.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_STMPE610.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_STMPE610.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_STMPE610.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_TT21xxx.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_TT21xxx.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_TT21xxx.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_TT21xxx.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_XPT2046.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -I.pio/libdeps/linux/LovyanGFX/src .pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_XPT2046.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": ".pio/libdeps/linux/LovyanGFX/src/lgfx/v1/touch/Touch_XPT2046.cpp",
+        "output": ".pio/build/linux/lib7f9/LovyanGFX/lgfx/v1/touch/Touch_XPT2046.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib891/network/flit.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -Ilib/common/include -Ilib/common -Ilib/network/include -Ilib/network/src lib/network/src/flit.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": "lib/network/src/flit.cpp",
+        "output": ".pio/build/linux/lib891/network/flit.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib891/network/header.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -Ilib/common/include -Ilib/common -Ilib/network/include -Ilib/network/src lib/network/src/header.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": "lib/network/src/header.cpp",
+        "output": ".pio/build/linux/lib891/network/header.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib891/network/packet.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -Ilib/common/include -Ilib/common -Ilib/network/include -Ilib/network/src lib/network/src/packet.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": "lib/network/src/packet.cpp",
+        "output": ".pio/build/linux/lib891/network/packet.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib761/estimation/estimation.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -Ilib/estimation/include -Ilib/estimation/src -Ilib/application/include -Ilib/application -I.pio/libdeps/linux/LovyanGFX/src -Ilib/common/include -Ilib/common -Ilib/network/include -Ilib/network/src lib/estimation/src/estimation.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": "lib/estimation/src/estimation.cpp",
+        "output": ".pio/build/linux/lib761/estimation/estimation.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib761/estimation/localnet.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -Ilib/estimation/include -Ilib/estimation/src -Ilib/application/include -Ilib/application -I.pio/libdeps/linux/LovyanGFX/src -Ilib/common/include -Ilib/common -Ilib/network/include -Ilib/network/src lib/estimation/src/localnet.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": "lib/estimation/src/localnet.cpp",
+        "output": ".pio/build/linux/lib761/estimation/localnet.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/lib761/estimation/macaddress.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -Ilib/estimation/include -Ilib/estimation/src -Ilib/application/include -Ilib/application -I.pio/libdeps/linux/LovyanGFX/src -Ilib/common/include -Ilib/common -Ilib/network/include -Ilib/network/src lib/estimation/src/macaddress.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": "lib/estimation/src/macaddress.cpp",
+        "output": ".pio/build/linux/lib761/estimation/macaddress.o"
+    },
+    {
+        "command": "/usr/bin/g++ -o .pio/build/linux/src/native/main.o -c -std=c++2b -xc++ -Og -g2 -ggdb2 -DPLATFORMIO=60113 -D__PLATFORMIO_BUILD_DEBUG__ -Iinclude -Isrc -Ilib/estimation/include -Ilib/estimation/src -Ilib/application/include -Ilib/application -Ilib/common/include -Ilib/common -Ilib/network/include -Ilib/network/src -I.pio/libdeps/linux/LovyanGFX/src src/native/main.cpp",
+        "directory": "/home/kons9/PlatformIO/Projects/shapechangeable_cpp",
+        "file": "src/native/main.cpp",
+        "output": ".pio/build/linux/src/native/main.o"
+    }
+]

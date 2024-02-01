@@ -8,12 +8,13 @@
 #include <algorithm>
 #include <expected>
 #include <optional>
+#include <cassert>
 
 
 namespace network {
 
 enum class Protocol : protocol_t {
-    DEFAULT,
+    DEFAULT = 1,
 };
 
 enum BitFlag : flag_t {
@@ -27,184 +28,148 @@ class Packet {
 #if CFG_TEST_PUBLIC == true
   public:
 #endif
-    version_t version;
-    length_t head_length;
-    priority_t priority;
+    version_t version = packet::CONFIG_CURRENT_VERSION;
+    length_t head_length = packet::CONFIG_NORMAL_HEADER_SIZE;
+    priority_t priority = 3;
     packetid_t packetid;
     ip_address_t global_src;
-    ip_address_t global_dst;
-    flag_t flag;
-    fragment_t fragment;
-    protocol_t protocol;
+    ip_address_t global_dst = BROADCAST_ADDRESS;
+    flag_t flag = BitFlag::NONE;
+    fragment_t fragment = 0;
+    protocol_t protocol = static_cast<protocol_t>(Protocol::DEFAULT);
     // must be last since this use all varialble in initilization
     headchecksum_t headchecksum;
-    Header header;
+    Header header = Header::Data;
 
-    message_buffer_t data;
-
-    headchecksum_t caluculate_checksum() const;
+    message_t data;
+    message_t head_raw_data;
+    std::size_t data_index = 0;    // for send
+    std::size_t header_index = 0;  // for send
+    bool header_finished = false;  // for receive
 
     flitid_t current_flit_index = 0;
-    bool ready() {
-        if (data.size() > packet::CONFIG_MTU - 1) {
-            return false;
-        }
-        // EOF
-        data.back().push_back(flit::FLIT_EOF);
-        auto rem = data.back().size() % flit::CONFIG_MESSAGE_LENGTH;
-        if (rem != 0) {
-            // push 0 to last
-            data.back().insert(data.back().end(), flit::CONFIG_MESSAGE_LENGTH - rem, 0);
-        }
-        return true;
-    }
+    flitid_t flit_length = 1;
+
+    headchecksum_t caluculate_checksum() const;
+    bool send_ready(void);
+    NetworkError parse_header(const message_t &data, size_t &last_index);
+    std::vector<message_element_t> make_header() const;
+    flitid_t calculate_flit_length(const message_t &data) const noexcept;
 
   public:
-    packetid_t get_packet_id() const {
+    bool is_send_finished(void) {
+        return data_index == data.size();
+    }
+    bool is_receive_finished(void) {
+        return header_finished && flit_length == current_flit_index;
+    }
+    packetid_t get_packet_id(void) const noexcept {
         return packetid;
     }
-    fragment_t get_fragment() const {
+    fragment_t get_fragment(void) const noexcept {
         return fragment;
     }
-    std::vector<message_element_t> get_data() {
-        std::vector<message_element_t> data;
+    std::vector<message_element_t> get_data(void) {
         // move all data
-        for (auto &flit : this->data) {
-            std::move(flit.begin(), flit.end(), std::back_inserter(data));
+        // must execute after ready or receive
+        // find eof
+        while (data.back() != flit::FLIT_EOF) {
+            auto val = data.back();
+            data.pop_back();
         }
+        data.pop_back();
+        auto data = std::move(this->data);
         this->data.clear();
-
         return data;
     }
-    Header get_header() const {
+    Header get_header(void) const noexcept {
         return header;
     }
 
-    ip_address_t get_src() const {
+    ip_address_t get_src(void) const noexcept {
         return global_src;
     }
+    flitid_t get_flit_length(void) const noexcept {
+        return flit_length;
+    }
+
+    std::vector<message_element_t> get_header_raw_data(void) const noexcept {
+        return head_raw_data;
+    }
+
     // for load flit
     Packet() = default;
-    /// @brief make a packet from flits
-    /// donot check flits are valid
-    Packet(length_t head_length,
-           priority_t priority,
+    Packet(Header header, packetid_t packetid, ip_address_t src, ip_address_t dst)
+        : packetid(packetid)
+        , global_src(src)
+        , global_dst(dst)
+        , headchecksum(caluculate_checksum())
+        , header(header) {
+        head_raw_data = make_header();
+    };
+    // Header::Data
+    Packet(packetid_t packetid, ip_address_t src, ip_address_t dst, std::vector<message_element_t> message)
+        : packetid(packetid)
+        , global_src(src)
+        , global_dst(dst)
+        , headchecksum(caluculate_checksum()) {
+        flit_length = calculate_flit_length(message);
+        head_raw_data = make_header();
+        data = std::move(message);
+    };
+    Packet(Header header,
            packetid_t packetid,
            ip_address_t src,
            ip_address_t dst,
-           flag_t flag)
-        : version(packet::CONFIG_CURRENT_VERSION)
-        , head_length(head_length)
-        , priority(priority)
-        , packetid(packetid)
+           std::vector<message_element_t> message)
+        : packetid(packetid)
         , global_src(src)
         , global_dst(dst)
-        , flag(flag)
-        , fragment(0)
-        , protocol(static_cast<protocol_t>(Protocol::DEFAULT))
         , headchecksum(caluculate_checksum())
-        , header(Header::Data) {
-        auto header = make_header();
-        data.push_back(std::move(header));
+        , header(header) {
+        flit_length = calculate_flit_length(message);
+        head_raw_data = make_header();
+        data = std::move(message);
     };
 
-    Packet(length_t head_length,
-           priority_t priority,
-           packetid_t packetid,
-           ip_address_t src,
-           ip_address_t dst,
-           flag_t flag,
-           std::vector<message_element_t> &message)
-        : version(packet::CONFIG_CURRENT_VERSION)
-        , head_length(head_length)
-        , priority(priority)
-        , packetid(packetid)
-        , global_src(src)
-        , global_dst(dst)
-        , flag(flag)
-        , fragment(0)
-        , protocol(static_cast<protocol_t>(Protocol::DEFAULT))
-        , headchecksum(caluculate_checksum()) {
-        // make header
-        auto header = make_header();
-
-        // make data
-        data = message_buffer_t();
-        data.push_back(std::move(header));
-        // one flit is CONFIG_MESSAGE_LENGTH
-        for (auto i = 0; i < message.size(); i += flit::CONFIG_MESSAGE_LENGTH) {
-            auto begin = message.begin() + i;
-            auto end = message.begin() + std::min(i + flit::CONFIG_MESSAGE_LENGTH, message.size());
-            data.push_back(std::vector<message_element_t>(begin, end));
-        }
-    }
-    std::vector<message_element_t> make_header() const {
-        std::vector<message_element_t> header;
-        header.push_back(version);
-        header.push_back(head_length);
-        header.push_back(priority);
-        header.push_back(packetid >> 8);
-        header.push_back(packetid & 0xff);
-        header.push_back(global_src >> 8);
-        header.push_back(global_src & 0xff);
-        header.push_back(global_dst >> 8);
-        header.push_back(global_dst & 0xff);
-        header.push_back(flag);
-        header.push_back(fragment);
-        header.push_back(headchecksum >> 8);
-        header.push_back(headchecksum & 0xff);
-        header.push_back(protocol);
-        return header;
-    }
-
-    NetworkError validate(void) const {
-        if (flag & HASFRAGMENT || flag & LASTFRAGMENT || fragment != 0) {
-            // currently, unsupported
-            return NetworkError::UNSUPPORTED;
-        }
-        auto length = (data.size() - 1) * flit::CONFIG_MESSAGE_LENGTH + data.back().size();
-        if (length > packet::CONFIG_MTU - 1) {
-            return NetworkError::OVER_MTU;
-        }
-        if (headchecksum != caluculate_checksum()) {
-            return NetworkError::CHECKSUM_NOT_MATCH;
-        }
-        if (version > packet::CONFIG_CURRENT_VERSION) {
-            return NetworkError::VERSION_UNSUPPORTED;
-        }
-        return NetworkError::OK;
-    }
+    NetworkError validate(void) const;
 
     // load flit one by one
-    std::expected<std::unique_ptr<Flit>, NetworkError> to_flit(const ip_address_t this_id,
-                                                               const Routing &routing) noexcept;
-    NetworkError load_flit(std::unique_ptr<Flit> &&flit) noexcept;
+    std::expected<Flit, NetworkError> to_flit(const ip_address_t this_id, const Routing &routing) noexcept;
+    NetworkError load_flit(const network::ip_address_t this_id, Flit &&flit) noexcept;
 
     template <traits::serial T>
     NetworkError send(T &sender, const ip_address_t this_id, const network::Routing &routing) {
         // send all flits
-        while (true) {
-            auto flit = to_flit(this_id, routing);
-            auto is_success = flit.has_value();
+        while (is_send_finished() == false) {
+            auto exp_flit = to_flit(this_id, routing);
+            auto is_success = exp_flit.has_value();
             if (!is_success) {
-                return flit.error();
+                return exp_flit.error();
             }
-            auto flit_ptr = std::move(flit.value());
-            flit_ptr->send(sender);
+            auto flit = std::move(exp_flit.value());
+            auto err = std::visit([&](auto &&flit) { return flit.send(sender); }, flit);
+            if (err != NetworkError::OK) {
+                return err;
+            }
         }
         return NetworkError::OK;
     }
 
-    template <traits::serial T> bool receive(T &receiver) {
+    template <traits::serial T>
+    bool receive(T &receiver, macaddress_t this_id) {
         while (true) {
-            std::unique_ptr<Flit> flit = receive(receiver);
-            auto err = load_flit(std::move(flit));
+            Flit flit;
+            auto serial_err = receive(receiver, flit);
+            if (serial_err != traits::SerialError::Ok) {
+                return false;
+            }
+            auto err = load_flit(this_id, std::move(flit));
             if (err != NetworkError::OK) {
                 return false;
             }
         }
     }
-
 
     bool operator<(const Packet &rhs) const {
         if (packetid != rhs.packetid) {

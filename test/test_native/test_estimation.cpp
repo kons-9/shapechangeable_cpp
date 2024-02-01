@@ -18,7 +18,7 @@ TEST(Estimation, local_location) {
     ASSERT_EQ(estimation::rotate_clockwise(location), estimation::LocalLocation::UpperRight);
     ASSERT_EQ(estimation::rotate_counterclockwise(location), estimation::LocalLocation::LowerLeft);
     estimation::coordinate_t coordinate = {0, 1};
-    ASSERT_EQ(e stimation::get_root_coordinate(location), coordinate);
+    ASSERT_EQ(estimation::get_root_coordinate(location), coordinate);
 
     location = estimation::LocalLocation::UpperRight;
     ASSERT_EQ(estimation::diagonal_location(location), estimation::LocalLocation::LowerLeft);
@@ -169,7 +169,10 @@ TEST(Estimation, get_confirmed_coordinate) {
 
         // send from root_id to this_id
         coordinate = {0, 1};
-        coordinate(std::make_pair(neighbor_this_unit_id, coordinate));
+        coordinates.push_back(std::make_pair(root_id, coordinate));
+        // send from neighbor_this_node(othernode information) to this_id
+        coordinate = {-1, -1};
+        coordinates.push_back(std::make_pair(neighbor_this_unit_id, coordinate));
         // cannot estimate
         ASSERT_FALSE(estimation::is_finished(this_id, coordinates));
     }
@@ -537,14 +540,16 @@ TEST(Estimation, process_data) {
     }
 }
 
-TEST(TemplateEstimation, Flit) {
-    // TODO: implement
+TEST(TemplateEstimation, flit) {
+    // ASSERT_EQ("TODO", "implement");
 }
-TEST(TemplateEstimation, Packet) {
-    // TODO: implement
+
+TEST(TemplateEstimation, packet) {
+    // ASSERT_EQ("TODO", "implement");
 }
+
 TEST(TemplateEstimation, init_coordinate) {
-    // TODO: implement
+    // ASSERT_EQ("TODO", "implement");
 }
 
 }  // namespace estimation

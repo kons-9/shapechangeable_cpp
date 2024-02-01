@@ -12,9 +12,6 @@
 namespace network {
 using namespace flit;
 
-std::optional<raw_data_t> uart_read(char *data, std::size_t size);
-
-
 enum class FlitType : flittype_t {
     Nope = 0,
     Head,
@@ -23,7 +20,7 @@ enum class FlitType : flittype_t {
 };
 
 
-class Flit {
+class BaseFlit {
 #if CFG_TEST_PUBLIC == true
   public:
 #endif
@@ -32,19 +29,18 @@ class Flit {
     virtual checksum_t culculate_checksum() const = 0;
     virtual FlitType get_type(void) const = 0;
     virtual NetworkError validate(void) const = 0;
-    virtual std::optional<message_t> get_data(void) = 0;
-    virtual std::optional<flitid_t> get_id(void) const = 0;
     virtual void to_rawdata(raw_data_t &raw_data) const = 0;
-    template <traits::serial T> traits::SerialError send(T &sender) const {
+    template <traits::serial T>
+    traits::SerialError send(T &sender) const {
         raw_data_t raw_data;
         to_rawdata(raw_data);
         // todo: automatically ack
         return sender.send(raw_data);
     }
-    virtual ~Flit() = default;
+    virtual ~BaseFlit() = default;
 };
 
-class NopeFlit : public Flit {
+class NopeFlit : public BaseFlit {
 #if CFG_TEST_PUBLIC == true
   public:
 #endif
@@ -69,19 +65,13 @@ class NopeFlit : public Flit {
     NetworkError validate(void) const override {
         return NetworkError::OK;
     };
-    std::optional<message_t> get_data(void) override {
-        return std::nullopt;
-    };
-    std::optional<flitid_t> get_id(void) const override {
-        return std::nullopt;
-    };
     void to_rawdata(raw_data_t &raw_data) const override;
     bool operator==(const NopeFlit &rhs) const {
         return version == rhs.version;
     };
 };
 
-class HeadFlit : public Flit {
+class HeadFlit : public BaseFlit {
 #if CFG_TEST_PUBLIC == true
   public:
 #endif
@@ -95,11 +85,7 @@ class HeadFlit : public Flit {
     checksum_t checksum;
 
   public:
-    HeadFlit(const flitid_t &length,
-             const Header &header,
-             const packetid_t &packetid,
-             const ip_address_t &src,
-             const ip_address_t &dst)
+    HeadFlit(flitid_t length, Header header, packetid_t packetid, ip_address_t src, ip_address_t dst)
         : version(CONFIG_CURRENT_VERSION)
         , length(length)
         , header(header)
@@ -109,14 +95,14 @@ class HeadFlit : public Flit {
         , option(0)
         , checksum(culculate_checksum()){};
 
-    HeadFlit(const version_t &version,
-             const flitid_t &length,
-             const Header &header,
-             const packetid_t &packetid,
-             const ip_address_t &src,
-             const ip_address_t &dst,
-             const option_t &option,
-             const checksum_t &checksum)
+    HeadFlit(version_t version,
+             flitid_t length,
+             Header header,
+             packetid_t packetid,
+             ip_address_t src,
+             ip_address_t dst,
+             option_t option,
+             checksum_t checksum)
         : version(version)
         , length(length)
         , header(header)
@@ -130,12 +116,6 @@ class HeadFlit : public Flit {
         return FlitType::Head;
     };
     NetworkError validate(void) const override;
-    std::optional<message_t> get_data(void) override {
-        return std::nullopt;
-    };
-    std::optional<flitid_t> get_id(void) const override {
-        return std::nullopt;
-    };
 
     packetid_t get_packet_id() const {
         return packetid;
@@ -163,7 +143,7 @@ class HeadFlit : public Flit {
     };
 };
 
-class BodyFlit : public Flit {
+class BodyFlit : public BaseFlit {
 #if CFG_TEST_PUBLIC == true
   public:
 #endif
@@ -189,10 +169,10 @@ class BodyFlit : public Flit {
         return FlitType::Body;
     };
     NetworkError validate(void) const override;
-    std::optional<message_t> get_data(void) override {
+    message_t get_data(void) {
         return data;
     };
-    std::optional<flitid_t> get_id(void) const override {
+    flitid_t get_id(void) const {
         return id;
     };
     void to_rawdata(raw_data_t &raw_data) const override;
@@ -201,7 +181,7 @@ class BodyFlit : public Flit {
     };
 };
 
-class TailFlit : public Flit {
+class TailFlit : public BaseFlit {
 #if CFG_TEST_PUBLIC == true
   public:
 #endif
@@ -226,10 +206,10 @@ class TailFlit : public Flit {
         return FlitType::Tail;
     };
     NetworkError validate(void) const override;
-    std::optional<message_t> get_data(void) override {
-        return std::move(data);
+    message_t get_data(void) {
+        return data;
     };
-    std::optional<flitid_t> get_id(void) const override {
+    flitid_t get_id(void) const {
         return id;
     };
     void to_rawdata(raw_data_t &raw_data) const override;
@@ -238,17 +218,32 @@ class TailFlit : public Flit {
     };
 };
 
-std::expected<std::unique_ptr<Flit>, NetworkError> decoder(raw_data_t &raw_data);
-template <typename T> std::unique_ptr<T> static_pointer_cast(std::unique_ptr<Flit> &&ptr) {
-    return std::unique_ptr<T>(static_cast<T *>(ptr.release()));
-}
-template <traits::serial T> static std::unique_ptr<Flit> receive(T &receiver) {
+// cast前提なので、variantを使う
+using Flit = std::variant<NopeFlit, HeadFlit, BodyFlit, TailFlit>;
+
+std::expected<Flit, NetworkError> decoder(raw_data_t &raw_data);
+
+template <traits::serial T>
+static traits::SerialError receive(T &receiver, Flit &flit, const network::ip_address_t this_id) {
     raw_data_t raw_data;
     auto err = receiver.receive(raw_data);
     if (!err) {
-        return nullptr;
+        return err;
     }
-    return decoder(raw_data).value();
+    flit = decoder(raw_data).value();
+    if (std::holds_alternative<HeadFlit>(flit)) {
+        auto headflit = std::get<HeadFlit>(std::move(flit));
+        if (headflit.get_dst() != this_id) {
+            return traits::SerialError::Ok;
+        }
+    }
+    return traits::SerialError::Ok;
 }
+
+template <traits::serial T>
+static traits::SerialError send(T &sender, const Flit &flit) {
+    return std::visit([&sender](auto &&arg) { return arg.send(sender); }, flit);
+}
+
 
 }  // namespace network

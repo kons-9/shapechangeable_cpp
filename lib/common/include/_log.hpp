@@ -11,6 +11,12 @@
 #define LOGD(tag, fmt, ...) Serial.printf(fmt "\n", ##__VA_ARGS__)
 #define LOGW(tag, fmt, ...) Serial.printf(fmt "\n", ##__VA_ARGS__)
 #define LOGE(tag, fmt, ...) Serial.printf(fmt "\n", ##__VA_ARGS__)
+#else  // native
+#include <cstdio>
+#define LOGI(tag, fmt, ...) printf(fmt "\n", ##__VA_ARGS__)
+#define LOGD(tag, fmt, ...) printf(fmt "\n", ##__VA_ARGS__)
+#define LOGW(tag, fmt, ...) printf(fmt "\n", ##__VA_ARGS__)
+#define LOGE(tag, fmt, ...) printf(fmt "\n", ##__VA_ARGS__)
 #endif
 #endif  // LOG
 

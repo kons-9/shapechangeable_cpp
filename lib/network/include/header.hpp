@@ -11,6 +11,8 @@ enum class Header : header_t {
     COORDINATE_ESTIMATION_RSP,
 };
 
-bool is_ack(Header &header);
+bool is_ack(const Header header) noexcept;
+bool only_header(const Header header) noexcept;
+bool valid_header(const Header header) noexcept;
 
 }  // namespace network
