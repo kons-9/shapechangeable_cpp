@@ -224,7 +224,7 @@ using Flit = std::variant<NopeFlit, HeadFlit, BodyFlit, TailFlit>;
 std::expected<Flit, NetworkError> decoder(raw_data_t &raw_data);
 
 template <traits::serial T>
-static traits::SerialError receive(T &receiver, Flit &flit, const network::ip_address_t this_id) {
+traits::SerialError receive(T &receiver, Flit &flit, const network::ip_address_t this_id) {
     raw_data_t raw_data;
     auto err = receiver.receive(raw_data);
     if (!err) {
@@ -233,15 +233,15 @@ static traits::SerialError receive(T &receiver, Flit &flit, const network::ip_ad
     flit = decoder(raw_data).value();
     if (std::holds_alternative<HeadFlit>(flit)) {
         auto headflit = std::get<HeadFlit>(std::move(flit));
-        if (headflit.get_dst() != this_id) {
-            return traits::SerialError::Ok;
+        if (headflit.get_dst() != this_id && headflit.get_dst() != network::BROADCAST_ADDRESS) {
+            return traits::SerialError::GenericError;
         }
     }
     return traits::SerialError::Ok;
 }
 
 template <traits::serial T>
-static traits::SerialError send(T &sender, const Flit &flit) {
+traits::SerialError send(T &sender, const Flit &flit) {
     return std::visit([&sender](auto &&arg) { return arg.send(sender); }, flit);
 }
 

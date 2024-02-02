@@ -26,7 +26,7 @@ class FsMock {
     }
     std::size_t read_image(const char *path, uint16_t *data, std::size_t len) {
         if (len < image.size()) {
-            LOGE(TAG, "read_image: buffer size is too small");
+            LOGE("read_image", "read_image: buffer size is too small");
             return 0;
         }
         std::copy(image.begin(), image.end(), data);

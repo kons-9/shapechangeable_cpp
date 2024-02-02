@@ -1,6 +1,8 @@
 #include "header.hpp"
 #include <_log.hpp>
 
+static const char *TAG = "header";
+
 namespace network {
 bool is_ack(const Header header) noexcept {
     switch (header) {

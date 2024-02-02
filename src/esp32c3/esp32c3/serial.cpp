@@ -80,7 +80,7 @@ void Uart::uart_send(::std::size_t size, const char *data) {
 
 bool Uart::uart_receive(::std::size_t size, char *data) {
     // TODO: more information in return value
-    if (xEventGroupWaitBits(uart_event_group, UART_DATA_BIT, pdTRUE, pdTRUE, 100 / portTICK_PERIOD_MS)
+    if (xEventGroupWaitBits(uart_event_group, UART_DATA_BIT, pdFALSE, pdFALSE, 1000 / portTICK_PERIOD_MS)
         != UART_DATA_BIT) {
         ESP_LOGW("uart", "uart_receive: timeout");
         return false;

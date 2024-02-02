@@ -554,6 +554,83 @@ TEST(Packet, from_to_flit) {
 #endif
         ASSERT_TRUE(packet2.is_receive_finished());
     }
+    {
+        auto data = message_t{
+            0xFF,  // confirmed
+            0x00,
+            0x01,  // src
+            0x00,
+            0x01,  // x
+            0x00,
+            0x01,  // y
+        };
+        auto t_data = data;
+        Packet packet(Header::COORDINATE_ESTIMATION_RSP, 12, this_ip, BROADCAST_ADDRESS, std::move(t_data));
+        auto header_raw_data = packet.get_header_raw_data();
+        auto exp_flit = packet.to_flit(this_ip, DefaultRouting());
+        ASSERT_TRUE(exp_flit.has_value());
+        ASSERT_TRUE(std::holds_alternative<HeadFlit>(exp_flit.value()));
+        auto headflit = std::get<HeadFlit>(std::move(exp_flit.value()));
+        ASSERT_EQ(headflit.validate(), NetworkError::OK);
+        ASSERT_EQ(headflit.get_header(), Header::COORDINATE_ESTIMATION_RSP);
+        ASSERT_EQ(headflit.get_packet_id(), 12);
+        ASSERT_EQ(headflit.get_src(), this_ip);
+        ASSERT_EQ(headflit.get_dst(), BROADCAST_ADDRESS);
+        ASSERT_EQ(headflit.get_length(), 3);
+
+        Packet packet2;
+        auto err = packet2.load_flit(this_ip, std::move(headflit));
+        ASSERT_EQ(err, NetworkError::OK);
+        ASSERT_EQ(packet2.get_header(), Header::COORDINATE_ESTIMATION_RSP);
+        ASSERT_EQ(packet2.get_packet_id(), 12);
+        ASSERT_EQ(packet2.get_flit_length(), 3);
+        ASSERT_FALSE(packet2.is_receive_finished());
+
+        exp_flit = packet.to_flit(this_ip, DefaultRouting());
+        ASSERT_TRUE(exp_flit.has_value());
+        ASSERT_TRUE(std::holds_alternative<BodyFlit>(exp_flit.value()));
+        auto bodyflit = std::get<BodyFlit>(std::move(exp_flit.value()));
+        ASSERT_EQ(bodyflit.validate(), NetworkError::OK);
+        ASSERT_EQ(bodyflit.get_id(), 1);
+        auto data2 = bodyflit.get_data();
+
+        err = packet2.load_flit(this_ip, std::move(bodyflit));
+        ASSERT_EQ(err, NetworkError::OK);
+
+        exp_flit = packet.to_flit(this_ip, DefaultRouting());
+        ASSERT_TRUE(exp_flit.has_value());
+        ASSERT_TRUE(std::holds_alternative<BodyFlit>(exp_flit.value()));
+        bodyflit = std::get<BodyFlit>(std::move(exp_flit.value()));
+        ASSERT_EQ(bodyflit.validate(), NetworkError::OK);
+        ASSERT_EQ(bodyflit.get_id(), 2);
+        data2 = bodyflit.get_data();
+
+        err = packet2.load_flit(this_ip, std::move(bodyflit));
+        ASSERT_EQ(err, NetworkError::OK);
+
+        exp_flit = packet.to_flit(this_ip, DefaultRouting());
+        ASSERT_TRUE(exp_flit.has_value());
+        ASSERT_TRUE(std::holds_alternative<TailFlit>(exp_flit.value()));
+        auto tailflit = std::get<TailFlit>(std::move(exp_flit.value()));
+        ASSERT_EQ(tailflit.validate(), NetworkError::OK);
+        ASSERT_EQ(tailflit.get_id(), 3);
+        data2 = tailflit.get_data();
+
+        err = packet2.load_flit(this_ip, std::move(tailflit));
+        ASSERT_EQ(err, NetworkError::OK);
+
+        ASSERT_TRUE(packet2.is_receive_finished());
+        data2 = packet2.get_data();
+
+        ASSERT_EQ(data2.size(), 7);
+        ASSERT_EQ(data2[0], 0xFF);
+        ASSERT_EQ(data2[1], 0);
+        ASSERT_EQ(data2[2], 1);
+        ASSERT_EQ(data2[3], 0);
+        ASSERT_EQ(data2[4], 1);
+        ASSERT_EQ(data2[5], 0);
+        ASSERT_EQ(data2[6], 1);
+    }
 }
 
 }  // namespace network

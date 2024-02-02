@@ -15,12 +15,6 @@ namespace estimation {
 template <traits::serial T, traits::file_system F>
 coordinate_t init_coordinate(TaskArgs<T, F> &args);
 
-template <traits::serial T>
-auto get_head_flit(network::raw_data_t &receive_raw_data, T &uart) -> std::optional<network::Packet>;
-
-template <traits::serial T>
-auto make_packet(network::Packet &packet, T &uart) -> network::NetworkError;
-
 // test done
 bool is_finished(network::ip_address_t this_id,
                  const std::vector<std::pair<uint32_t, coordinate_t>> &confirmed_coordinates);
@@ -35,6 +29,14 @@ auto process_data(const network::ip_address_t src,
                   std::vector<std::pair<network::macaddress_t, coordinate_t>> &confirmed_coordinates)
     -> network::NetworkError;
 
+
+auto make_response_to_same_unit(
+    bool is_confirm,
+    const network::ip_address_t this_ip_address,
+    const std::vector<std::pair<network::macaddress_t, coordinate_t>> &confirmed_coordinates) -> network::Packet;
+auto make_response_to_other_unit(const network::ip_address_t this_ip_address, const coordinate_t confirmed_coordinates)
+    -> network::Packet;
+auto make_request(const network::ip_address_t this_ip_address) -> network::Packet;
 }  // namespace estimation
 
 #include "estimation.tpp"

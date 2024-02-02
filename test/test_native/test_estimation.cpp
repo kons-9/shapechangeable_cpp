@@ -540,12 +540,44 @@ TEST(Estimation, process_data) {
     }
 }
 
-TEST(TemplateEstimation, flit) {
-    // ASSERT_EQ("TODO", "implement");
-}
-
-TEST(TemplateEstimation, packet) {
-    // ASSERT_EQ("TODO", "implement");
+TEST(TemplateEstimation, serial) {
+    test::SerialMock serial;
+    network::macaddress_t this_id = make_macaddress(1, LocalLocation::LowerRight, false);
+    network::ip_address_t this_ip_address = macaddress_to_ip_address(this_id);
+    network::macaddress_t src_id = make_macaddress(2, LocalLocation::LowerLeft, false);
+    network::ip_address_t src_ip_address = macaddress_to_ip_address(src_id);
+    // this -> serial
+    {
+        auto packet = make_request(this_id);
+        auto err = packet.send(serial, this_id, network::DefaultRouting());
+        ASSERT_EQ(err, traits::SerialError::Ok);
+    }
+    // src <- serial
+    {
+        auto packet = network::Packet();
+        auto err = packet.receive(serial, src_id);
+        ASSERT_TRUE(err);
+        ASSERT_EQ(packet.get_header(), network::Header::COORDINATE_ESTIMATION);
+    }
+    // src -> serial -
+    {
+        auto packet = make_response_to_other_unit(this_ip_address, coordinate_t{2, 2});
+        auto err = packet.send(serial, src_ip_address, network::DefaultRouting());
+        ASSERT_EQ(err, traits::SerialError::Ok);
+    }
+    // this <- serial
+    {
+        auto packet = network::Packet();
+        auto err = packet.receive(serial, this_id);
+        ASSERT_TRUE(err);
+        ASSERT_EQ(packet.get_header(), network::Header::COORDINATE_ESTIMATION_RSP);
+        auto data = packet.get_data();
+        auto confirmed_coordinates = std::vector<std::pair<network::macaddress_t, coordinate_t>>();
+        process_data(src_ip_address, this_ip_address, data, confirmed_coordinates);
+        ASSERT_EQ(confirmed_coordinates.size(), 1);
+        ASSERT_EQ(confirmed_coordinates[0].first, src_ip_address);
+        ASSERT_EQ(confirmed_coordinates[0].second, (coordinate_t{2, 2}));
+    }
 }
 
 TEST(TemplateEstimation, init_coordinate) {

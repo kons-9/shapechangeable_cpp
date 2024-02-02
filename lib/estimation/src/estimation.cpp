@@ -210,4 +210,59 @@ auto process_data(const network::ip_address_t src,
         return network::NetworkError::OK;
     }
 }
+
+auto make_response_to_same_unit(
+    bool is_confirm,
+    const network::ip_address_t this_ip_address,
+    const std::vector<std::pair<network::macaddress_t, coordinate_t>> &confirmed_coordinates) -> network::Packet {
+
+    auto data = std::vector<uint8_t>();
+    data.push_back(is_confirm ? 0xFF : 0x00);
+
+    auto filtered_coordinates = std::vector<std::pair<network::macaddress_t, coordinate_t>>();
+    if (is_confirm) {
+        // filter same unit node
+        for (auto iter = confirmed_coordinates.begin(); iter != confirmed_coordinates.end(); iter++) {
+            if (is_same_unit_node(this_ip_address, iter->first)) {
+                filtered_coordinates.push_back(*iter);
+            }
+        }
+    } else {
+        // filter not same unit node and replace mac address to this ip address
+        for (auto iter = confirmed_coordinates.begin(); iter != confirmed_coordinates.end(); iter++) {
+            if (!is_same_unit_node(this_ip_address, iter->first)) {
+                filtered_coordinates.push_back(std::make_pair(this_ip_address, iter->second));
+            }
+        }
+    }
+    return network::Packet(network::Header::COORDINATE_ESTIMATION_RSP,
+                           network::packetid_t(0),
+                           this_ip_address,
+                           network::BROADCAST_ADDRESS,
+                           std::move(data));
+}
+auto make_response_to_other_unit(const network::ip_address_t this_ip_address, const coordinate_t confirmed_coordinates)
+    -> network::Packet {
+    auto data = std::vector<uint8_t>{
+        0xFF,
+        static_cast<uint8_t>(this_ip_address >> 8),
+        static_cast<uint8_t>(this_ip_address),
+        static_cast<uint8_t>(confirmed_coordinates.first >> 8),
+        static_cast<uint8_t>(confirmed_coordinates.first),
+        static_cast<uint8_t>(confirmed_coordinates.second >> 8),
+        static_cast<uint8_t>(confirmed_coordinates.second),
+    };
+
+    return network::Packet(network::Header::COORDINATE_ESTIMATION_RSP,
+                           network::packetid_t(0),
+                           this_ip_address,
+                           network::BROADCAST_ADDRESS,
+                           std::move(data));
+}
+auto make_request(const network::ip_address_t this_ip_address) -> network::Packet {
+    return network::Packet(network::Header::COORDINATE_ESTIMATION,
+                           network::packetid_t(0),
+                           this_ip_address,
+                           network::BROADCAST_ADDRESS);
+}
 }  // namespace estimation

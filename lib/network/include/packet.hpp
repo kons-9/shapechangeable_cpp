@@ -1,4 +1,5 @@
 #pragma once
+#include "_log.hpp"
 #include "types.hpp"
 #include "flit.hpp"
 #include "routing.hpp"
@@ -74,7 +75,6 @@ class Packet {
         // must execute after ready or receive
         // find eof
         while (data.back() != flit::FLIT_EOF) {
-            auto val = data.back();
             data.pop_back();
         }
         data.pop_back();
@@ -149,8 +149,8 @@ class Packet {
             }
             auto flit = std::move(exp_flit.value());
             auto err = std::visit([&](auto &&flit) { return flit.send(sender); }, flit);
-            if (err != NetworkError::OK) {
-                return err;
+            if (err != traits::SerialError::Ok) {
+                return NetworkError::SEND_ERROR;
             }
         }
         return NetworkError::OK;
@@ -158,13 +158,24 @@ class Packet {
 
     template <traits::serial T>
     bool receive(T &receiver, macaddress_t this_id) {
+        const auto TAG = "Packet::receive";
         while (true) {
             Flit flit;
-            auto serial_err = receive(receiver, flit);
+            traits::SerialError serial_err = network::receive(receiver, flit, (ip_address_t)(this_id));
             if (serial_err != traits::SerialError::Ok) {
+                LOGE(TAG, "receive error");
                 return false;
             }
+            if (std::holds_alternative<NopeFlit>(flit)) {
+                LOGE(TAG, "receive nope flit");
+                return false;
+            }
+            if (std::holds_alternative<TailFlit>(flit)) {
+                auto err = load_flit(this_id, std::move(flit));
+                return err;
+            }
             auto err = load_flit(this_id, std::move(flit));
+            LOGI(TAG, "load flit");
             if (err != NetworkError::OK) {
                 return false;
             }

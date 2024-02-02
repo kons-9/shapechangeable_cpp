@@ -1,4 +1,7 @@
 
+#ifndef __linux__
+#error "This file is for Linux only"
+#endif
 
 #include <stdio.h>
 #include <types.hpp>

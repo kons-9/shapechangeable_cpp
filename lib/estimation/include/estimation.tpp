@@ -10,60 +10,6 @@
 namespace estimation {
 static const char *TAG = "estimation";
 
-template <traits::serial T>
-auto get_head_flit(network::raw_data_t &receive_raw_data, T &uart) -> std::optional<network::Packet> {
-    // auto is_success = uart.receive(receive_raw_data);
-    // if (!is_success) {
-    //     return std::nullopt;
-    // }
-    // auto deceded_data = network::decoder(receive_raw_data);
-    // if (!deceded_data.has_value()) {
-    //     return std::nullopt;
-    // }
-    // auto flit = std::move(deceded_data.value());
-    // if (!std::holds_alternative<network::HeadFlit>(flit) {
-    //     return std::nullopt;
-    // }
-
-    auto packet = network::Packet();
-    // auto is_last = std::holds_alternative<network::TailFlit>(flit);
-    // auto err = packet.load_flit(std::move(flit));
-    // if (err != network::NetworkError::OK) {
-    //     LOGE(TAG, "packet load flit error: %d", err);
-    //     return std::nullopt;
-    // }
-
-    return packet;
-}
-template <traits::serial T>
-auto make_packet(network::Packet &packet, T &uart) -> network::NetworkError {
-    // network::raw_data_t receive_raw_data;
-    // auto is_last = false;
-    // network::NetworkError err;
-    // while (!is_last) {
-    //     auto is_success = uart.receive(receive_raw_data);
-    //     if (!is_success) {
-    //         return network::NetworkError::RECEIVE_ERROR;
-    //     }
-    //     auto deceded_data = network::decoder(receive_raw_data);
-    //     if (!deceded_data.has_value()) {
-    //         return network::NetworkError::DECODER_ERROR;
-    //     }
-    //     auto flit = std::move(deceded_data.value());
-    //     if (std::holds_alternative<network::Headflit>(flit) {
-    //         return network::NetworkError::HEAD_FLIT_ERROR;
-    //     }
-    //     is_last = std::holds_alternative<network::TailFlit>(flit);
-    //     err = packet.load_flit(std::move(flit));
-    //     if (err != network::NetworkError::OK) {
-    //         LOGE(TAG, "packet load flit error: %d", err);
-    //         return err;
-    //     }
-    // }
-    return network::NetworkError::OK;
-}
-
-
 template <traits::serial T, traits::file_system F>
 auto init_coordinate(TaskArgs<T, F> &args) -> coordinate_t {
     T &uart = args.uart;
@@ -76,7 +22,7 @@ auto init_coordinate(TaskArgs<T, F> &args) -> coordinate_t {
         LOGE(TAG, "read mac address error");
         assert(false);
     }
-    auto this_ip_address = macaddress_to_node_id(this_macaddress.value());
+    auto this_ip_address = macaddress_to_ip_address(this_macaddress.value());
 
     const network::HeadFlit ESTIMATION_FLIT = network::HeadFlit(0,
                                                                 network::Header::COORDINATE_ESTIMATION,
@@ -99,21 +45,19 @@ auto init_coordinate(TaskArgs<T, F> &args) -> coordinate_t {
         }
         cnt++;
 
-        // 1. get head flit
-        network::raw_data_t receive_raw_data;
-
-        auto _packet = get_head_flit(receive_raw_data, uart);
-        if (!_packet.has_value()) {
+        // 1. make request
+        auto packet = make_request(this_ip_address);
+        auto err = packet.send(uart, this_ip_address, network::DefaultRouting());
+        if (err != network::NetworkError::OK) {
             LOGE(TAG, "get head flit error");
             continue;
         }
-        auto packet = std::move(_packet.value());
 
-        // 2. get body flit and tail flit
-        auto err = make_packet(packet, uart);
-        if (err != network::NetworkError::OK) {
-            // error
-            LOGE(TAG, "packet load flit error: %d", err);
+        // 2. receive packet
+        packet = network::Packet();
+        auto berr = packet.receive(uart, this_ip_address);
+        if (!berr) {
+            LOGE(TAG, "receive packet error");
             continue;
         }
 
@@ -124,7 +68,6 @@ auto init_coordinate(TaskArgs<T, F> &args) -> coordinate_t {
             LOGE(TAG, "packet validate error: %d", err);
             continue;
         }
-
         lov_display.printf("receive packet\n");
         LOGI(TAG, "receive packet");
 
@@ -134,7 +77,8 @@ auto init_coordinate(TaskArgs<T, F> &args) -> coordinate_t {
             if (confirmed_coordinates.size() == 0) {
                 continue;
             }
-            // TODO: send confirmed coordinate
+            auto packet = make_response_to_same_unit(false, this_ip_address, confirmed_coordinates);
+            packet.send(uart, this_ip_address, network::DefaultRouting());
             break;
         }
         case network::Header::COORDINATE_ESTIMATION_RSP: {

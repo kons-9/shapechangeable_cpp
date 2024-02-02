@@ -18,6 +18,7 @@ enum NetworkError {
 
     // for uart
     RECEIVE_ERROR = 100,
+    SEND_ERROR,
     DECODER_ERROR,
     HEAD_FLIT_ERROR,
     INVALID_DESTINATION,
