@@ -9,7 +9,6 @@
 #include <algorithm>
 #include <expected>
 #include <optional>
-#include <cassert>
 
 
 namespace network {
@@ -59,6 +58,11 @@ class Packet {
 
   public:
     bool is_send_finished(void) {
+        if (current_flit_index < 1) {
+            return false;
+        }
+        LOGI("Packet::is_send_finished", "current_flit_index: %d, flit_length: %d", current_flit_index, flit_length);
+        LOGI("Packet::is_send_finished", "data_index: %d, data.size(): %d", data_index, data.size());
         return data_index == data.size();
     }
     bool is_receive_finished(void) {
@@ -89,6 +93,9 @@ class Packet {
     ip_address_t get_src(void) const noexcept {
         return global_src;
     }
+    ip_address_t get_dst(void) const noexcept {
+        return global_dst;
+    }
     flitid_t get_flit_length(void) const noexcept {
         return flit_length;
     }
@@ -96,9 +103,27 @@ class Packet {
     std::vector<message_element_t> get_header_raw_data(void) const noexcept {
         return head_raw_data;
     }
+    void reset(void) {
+        current_flit_index = 0;
+        data_index = 0;
+        header_index = 0;
+        header_finished = false;
+        head_raw_data.clear();
+        data.clear();
+    }
 
     // for load flit
     Packet() = default;
+
+    // for system packet
+    Packet(Header header, ip_address_t src)
+        : packetid(SYSTEM_PACKET_ID)
+        , global_src(src)
+        , global_dst(BROADCAST_ADDRESS)
+        , headchecksum(caluculate_checksum())
+        , header(header){};
+
+    // head only packet
     Packet(Header header, packetid_t packetid, ip_address_t src, ip_address_t dst)
         : packetid(packetid)
         , global_src(src)
@@ -117,6 +142,8 @@ class Packet {
         head_raw_data = make_header();
         data = std::move(message);
     };
+
+    // general packet
     Packet(Header header,
            packetid_t packetid,
            ip_address_t src,
@@ -142,26 +169,34 @@ class Packet {
     NetworkError send(T &sender, const ip_address_t this_id, const network::Routing &routing) {
         // send all flits
         while (is_send_finished() == false) {
+            LOGI("Packet::send", "send ready");
             auto exp_flit = to_flit(this_id, routing);
-            auto is_success = exp_flit.has_value();
-            if (!is_success) {
+            if (!exp_flit.has_value()) {
                 return exp_flit.error();
             }
             auto flit = std::move(exp_flit.value());
-            auto err = std::visit([&](auto &&flit) { return flit.send(sender); }, flit);
+            auto err = std::visit(
+                [&](auto &&flit) {
+                    // return flit.send(sender);
+                    return sender.send(flit);
+                },
+                flit);
             if (err != traits::SerialError::Ok) {
                 return NetworkError::SEND_ERROR;
             }
         }
+        LOGI("Packet::send", "send finished");
         return NetworkError::OK;
     }
 
     template <traits::serial T>
     bool receive(T &receiver, macaddress_t this_id) {
+        reset();
         const auto TAG = "Packet::receive";
-        while (true) {
-            Flit flit;
-            traits::SerialError serial_err = network::receive(receiver, flit, (ip_address_t)(this_id));
+        while (is_receive_finished() == false) {
+            Flit flit = NopeFlit();
+            // traits::SerialError serial_err = network::receive(receiver, flit, (ip_address_t)(this_id));
+            traits::SerialError serial_err = receiver.receive(flit);
             if (serial_err != traits::SerialError::Ok) {
                 LOGE(TAG, "receive error");
                 return false;
@@ -170,16 +205,14 @@ class Packet {
                 LOGE(TAG, "receive nope flit");
                 return false;
             }
-            if (std::holds_alternative<TailFlit>(flit)) {
-                auto err = load_flit(this_id, std::move(flit));
-                return err;
-            }
             auto err = load_flit(this_id, std::move(flit));
-            LOGI(TAG, "load flit");
             if (err != NetworkError::OK) {
+                LOGE(TAG, "load flit error %d", err);
                 return false;
             }
+            LOGI(TAG, "load flit");
         }
+        return true;
     }
 
     bool operator<(const Packet &rhs) const {

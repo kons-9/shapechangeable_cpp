@@ -13,25 +13,31 @@ static const char *TAG = "display_sample";
 
 void hello_ferris_task(void *args) {
     LOGI(TAG, "hello_ferris_task");
-    TaskArgs<serial::Uart, fs::SpiFFS> *task_args = (TaskArgs<serial::Uart, fs::SpiFFS> *)args;
+    TaskArgs<serial::Link, fs::SpiFFS> *task_args = (TaskArgs<serial::Link, fs::SpiFFS> *)args;
     auto &lov_display = task_args->lov_display;
     auto image = task_args->image_buffer;
     auto &spiffs = task_args->spiffs;
 
-    lov_display.init();
-    lov_display.printf("Hello World.\nI'm lovyanGFX.\nIt is a super useful library.\n");
 
-    auto len = spiffs.read_image("/spiffs/ferris.raw", image, 128 * 128);
+    lov_display.printf("Hello World.\nI'm lovyanGFX.\nIt is a super useful library.\n");
+    std::size_t len = 0;
+    len = spiffs.read_image("/spiffs/ferris.raw", image, 128 * 128);
+    lov_display.printf("debug: hello_ferris_task\n");
+
     if (len <= 0) {
         ESP_LOGE(TAG, "Failed to read image");
         vTaskDelete(NULL);
         return;
     }
     ESP_LOGI(TAG, "readed image: %d", len);
+    lov_display.printf("readed image: %d\n", len);
     auto disp_width = lov_display.width();
     auto disp_height = lov_display.height();
     auto image_width = 86;
     auto image_height = len / 86;
+    lov_display.printf("printing image...\n");
+
+    vTaskDelay(10 / portTICK_PERIOD_MS);
 
     lov_display.fillScreen(TFT_BLACK);
     lov_display.pushImage((disp_width - image_width) >> 1,
@@ -43,10 +49,13 @@ void hello_ferris_task(void *args) {
 
     // delete
     vTaskDelete(NULL);
+    while (true) {
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
 }
 
 void sample_display_task(void *args) {
-    TaskArgs<serial::Uart, fs::SpiFFS> *task_args = (TaskArgs<serial::Uart, fs::SpiFFS> *)args;
+    TaskArgs<serial::Link, fs::SpiFFS> *task_args = (TaskArgs<serial::Link, fs::SpiFFS> *)args;
     auto &spiffs = task_args->spiffs;
     auto &lov_display = task_args->lov_display;
     auto image = task_args->image_buffer;

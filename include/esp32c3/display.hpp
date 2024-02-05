@@ -58,5 +58,10 @@ class LGFX : public lgfx::LGFX_Device {
 
         setPanel(&_panel_instance);
     }
+
+    ~LGFX() {
+        ESP_LOGE("LGFX", "LGFX destructor never called");
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
 };
 }  // namespace display

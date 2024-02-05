@@ -3,11 +3,8 @@
 #include <flit.hpp>
 #include <types.hpp>
 
-static constexpr gpio_num_t TX_PIN = GPIO_NUM_21;
-static constexpr gpio_num_t RX_PIN = GPIO_NUM_20;
-
 void sample_uart_rx_task(void *args) {
-    TaskArgs<serial::Uart, fs::SpiFFS> *task_args = (TaskArgs<serial::Uart, fs::SpiFFS> *)args;
+    TaskArgs<serial::Link, fs::SpiFFS> *task_args = (TaskArgs<serial::Link, fs::SpiFFS> *)args;
     auto &uart = task_args->uart;
     auto &spiffs = task_args->spiffs;
     network::ip_address_t address = spiffs.read_macaddress().value_or(0);
@@ -16,7 +13,7 @@ void sample_uart_rx_task(void *args) {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
         network::raw_data_t raw_data;
         auto is_success = uart.receive(raw_data);
-        if (!is_success) {
+        if (is_success != traits::SerialError::Ok) {
             ESP_LOGW("test", "uart receive error");
             continue;
         }
@@ -42,12 +39,20 @@ void sample_uart_rx_task(void *args) {
             && flit.get_packet_id() == network::SYSTEM_PACKET_ID && flit.get_dst() == network::BROADCAST_ADDRESS
             && flit.get_src() == address) {
             ESP_LOGI("test", "receive estimation flit");
+            continue;
         }
+        ESP_LOGI("test",
+                 "receive flit: %d, %d, %d, %d, %d",
+                 (int)flit.get_type(),
+                 (int)flit.get_header(),
+                 (int)flit.get_packet_id(),
+                 (int)flit.get_src(),
+                 (int)flit.get_dst());
     }
 }
 
 void sample_uart_tx_task(void *args) {
-    TaskArgs<serial::Uart, fs::SpiFFS> *task_args = (TaskArgs<serial::Uart, fs::SpiFFS> *)args;
+    TaskArgs<serial::Link, fs::SpiFFS> *task_args = (TaskArgs<serial::Link, fs::SpiFFS> *)args;
     auto &uart = task_args->uart;
     auto &spiffs = task_args->spiffs;
 
@@ -61,6 +66,52 @@ void sample_uart_tx_task(void *args) {
         network::raw_data_t raw_data;
         head_flit.to_rawdata(raw_data);
         uart.send(raw_data);
+        vTaskDelay(3000 / portTICK_PERIOD_MS);
+    }
+}
+
+void sample_packet_uart_rx_task(void *args) {
+    TaskArgs<serial::Link, fs::SpiFFS> *task_args = (TaskArgs<serial::Link, fs::SpiFFS> *)args;
+    auto &uart = task_args->uart;
+    auto &spiffs = task_args->spiffs;
+    network::ip_address_t address = spiffs.read_macaddress().value_or(0);
+
+    while (true) {
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        network::Packet packet;
+        // auto err = packet.receive(uart, address);
+        auto err = uart.receive(packet, address);
+        if (err != network::NetworkError::OK) {
+            ESP_LOGE("test", "send error: %d", (int)err);
+        }
+
+        if (packet.get_header() == network::Header::COORDINATE_ESTIMATION
+            && packet.get_packet_id() == network::SYSTEM_PACKET_ID && packet.get_dst() == network::BROADCAST_ADDRESS
+            && packet.get_src() != address) {
+            ESP_LOGI("test", "receive estimation flit");
+            continue;
+        }
+        ESP_LOGW("test",
+                 "unknown: receive flit: header: %d, packetid: %d, src: %d, dst: %d, address: %d",
+                 (network::header_t)packet.get_header(),
+                 packet.get_packet_id(),
+                 packet.get_src(),
+                 packet.get_dst(),
+                 address);
+    }
+}
+
+void sample_packet_uart_tx_task(void *args) {
+    TaskArgs<serial::Link, fs::SpiFFS> *task_args = (TaskArgs<serial::Link, fs::SpiFFS> *)args;
+    auto &uart = task_args->uart;
+    auto &spiffs = task_args->spiffs;
+
+    network::ip_address_t address;
+    address = spiffs.read_macaddress().value_or(0);
+    auto routing = network::DefaultRouting();
+    while (true) {
+        network::Packet packet = network::Packet(network::Header::COORDINATE_ESTIMATION, address);
+        uart.send(packet, address);
         vTaskDelay(3000 / portTICK_PERIOD_MS);
     }
 }

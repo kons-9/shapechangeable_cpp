@@ -14,12 +14,14 @@ class TaskArgs {
     F &spiffs;
     uint16_t *image_buffer;
     task_id_t task_id;
+    std::mutex lock;
 
     TaskArgs(T &uart, lgfx::LGFX_Device &lov_display, F &spiffs, uint16_t *image_buffer, uint8_t task_id)
         : uart(uart)
         , lov_display(lov_display)
         , spiffs(spiffs)
         , image_buffer(image_buffer)
-        , task_id(task_id) {
+        , task_id(task_id)
+        , lock() {
     }
 };

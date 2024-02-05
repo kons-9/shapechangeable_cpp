@@ -133,7 +133,11 @@ std::expected<Flit, NetworkError> decoder(raw_data_t &raw_data) {
         flitid_t length = raw_data[8] << 8 | raw_data[9];
         Header header = static_cast<Header>(raw_data[10] << 8 | raw_data[11]);
         option_t option = raw_data[12] << 8 | raw_data[13];
-        return HeadFlit(version, length, header, packetid, src, dst, option, checksum);
+        auto flit = HeadFlit(version, length, header, packetid, src, dst, option, checksum);
+        if (flit.validate() == NetworkError::OK) {
+            return flit;
+        }
+        return std::unexpected(NetworkError::INVALID_CHECKSUM);
     }
     case FlitType::Body: {
         // version:8:flittype:8:flitid:16:message:80:checksum:16
@@ -142,7 +146,11 @@ std::expected<Flit, NetworkError> decoder(raw_data_t &raw_data) {
             data[i] = raw_data[i + 4];
         }
         flitid_t id = raw_data[2] << 8 | raw_data[3];
-        return BodyFlit(version, id, std::move(data), checksum);
+        auto flit = BodyFlit(version, id, std::move(data), checksum);
+        if (flit.validate() == NetworkError::OK) {
+            return flit;
+        }
+        return std::unexpected(NetworkError::INVALID_CHECKSUM);
     }
     case FlitType::Tail: {
         auto data = message_t(CONFIG_MESSAGE_LENGTH);
@@ -150,7 +158,11 @@ std::expected<Flit, NetworkError> decoder(raw_data_t &raw_data) {
             data[i] = raw_data[i + 4];
         }
         flitid_t id = raw_data[2] << 8 | raw_data[3];
-        return TailFlit(version, id, std::move(data), checksum);
+        auto flit = TailFlit(version, id, std::move(data), checksum);
+        if (flit.validate() == NetworkError::OK) {
+            return flit;
+        }
+        return std::unexpected(NetworkError::INVALID_CHECKSUM);
     }
     case FlitType::Nope: {
         return NopeFlit(version, checksum);

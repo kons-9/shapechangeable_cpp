@@ -8,36 +8,28 @@ TEST(Mock, serial_normal) {
     auto serial = test::SerialMock();
     network::raw_data_t data = {0x01, 0x02, 0x03};
     serial.send(data);
-    ASSERT_EQ(serial.raw_data, data);
-    ASSERT_EQ(serial.has_value, true);
+    ASSERT_EQ(serial.raw_data[0], data);
 
     network::raw_data_t data2 = {};
     serial.receive(data2);
     ASSERT_EQ(data2, data);
-    ASSERT_EQ(serial.has_value, false);
 }
 
-TEST(Mock, serial_collition) {
+TEST(Mock, sequencial) {
     auto serial = test::SerialMock();
     network::raw_data_t data = {0x01, 0x02, 0x03};
     serial.send(data);
-    ASSERT_EQ(serial.raw_data, data);
-    ASSERT_EQ(serial.has_value, true);
-    ASSERT_EQ(serial.collision, false);
+    ASSERT_EQ(serial.raw_data[0], data);
 
     network::raw_data_t data2 = {0x04, 0x05, 0x06};
-    ASSERT_EQ(serial.send(data2), traits::SerialError::GenericError);
-    ASSERT_NE(serial.raw_data, data);
-    ASSERT_EQ(serial.has_value, true);
-    ASSERT_EQ(serial.collision, true);
+    ASSERT_EQ(serial.send(data2), traits::SerialError::Ok);
+    ASSERT_NE(serial.raw_data[1], data);
 
     network::raw_data_t data3 = {};
     serial.receive(data3);
-    ASSERT_NE(data3, data);
-    ASSERT_NE(data3, data2);
-    // reset
-    ASSERT_EQ(serial.has_value, false);
-    ASSERT_EQ(serial.collision, false);
+    ASSERT_EQ(data3, data);
+    serial.receive(data3);
+    ASSERT_EQ(data3, data2);
 }
 
 TEST(Mock, fs) {

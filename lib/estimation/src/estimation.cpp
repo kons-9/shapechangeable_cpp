@@ -260,9 +260,6 @@ auto make_response_to_other_unit(const network::ip_address_t this_ip_address, co
                            std::move(data));
 }
 auto make_request(const network::ip_address_t this_ip_address) -> network::Packet {
-    return network::Packet(network::Header::COORDINATE_ESTIMATION,
-                           network::packetid_t(0),
-                           this_ip_address,
-                           network::BROADCAST_ADDRESS);
+    return network::Packet(network::Header::COORDINATE_ESTIMATION, this_ip_address);
 }
 }  // namespace estimation

@@ -6,7 +6,6 @@
 #include <_log.hpp>
 
 #include <variant>
-#include <cassert>
 #include <expected>
 
 namespace network {
@@ -66,6 +65,9 @@ NetworkError Packet::validate(void) const {
 }
 
 bool Packet::send_ready(void) {
+    if (only_header(header)) {
+        return true;
+    }
     if (data.size() > packet::CONFIG_MTU - 1) {
         return false;
     }
@@ -100,6 +102,7 @@ std::expected<Flit, NetworkError> Packet::to_flit(const ip_address_t this_id,
             default: return std::unexpected(INVALID_FLIT_UNKNOWN);
             }
         }
+        LOGI("Packet::to_flit", "success to make head flit");
         return flit;
     } else if (current_flit_index < flit_length) {
         // make body flit
@@ -133,6 +136,7 @@ std::expected<Flit, NetworkError> Packet::to_flit(const ip_address_t this_id,
             return std::unexpected(NetworkError::INVALID_FLIT_UNKNOWN);
         }
 
+        LOGI("Packet::to_flit", "success to make body flit");
         return flit;
     } else if (current_flit_index == flit_length) {
         if (only_header(header)) {
@@ -168,6 +172,7 @@ std::expected<Flit, NetworkError> Packet::to_flit(const ip_address_t this_id,
         if (flit.validate() != NetworkError::OK) {
             return std::unexpected(NetworkError::INVALID_FLIT_UNKNOWN);
         }
+        LOGI("Packet::to_flit", "success to make tail flit");
         return flit;
     } else {
         return std::unexpected(NetworkError::ALREADY_FINISHED);
@@ -185,7 +190,9 @@ NetworkError Packet::parse_header(const message_t &data, size_t &last_index) {
         header_finished = true;
         last_index = 4;
     } else {
-        assert(data.size() == CONFIG_MESSAGE_LENGTH);
+        if (data.size() < CONFIG_MESSAGE_LENGTH) {
+            return NetworkError::INVALID_LENGTH;
+        }
         version = data[0];
         head_length = data[1];
         priority = data[2];
@@ -206,6 +213,7 @@ NetworkError Packet::load_flit(const network::ip_address_t this_id, Flit &&flit)
     case FlitType::Head: {
         auto head = std::get<HeadFlit>(std::move(flit));
         if (head.validate() != NetworkError::OK) {
+            LOGW("Packet::load_flit", "head flit validate error");
             return NetworkError::INVALID_FLIT_UNKNOWN;
         }
         header = head.get_header();
@@ -213,6 +221,7 @@ NetworkError Packet::load_flit(const network::ip_address_t this_id, Flit &&flit)
         // src = head.get_src();
         auto dst = head.get_dst();
         if (dst != this_id && dst != BROADCAST_ADDRESS) {
+            LOGW("Packet::load_flit", "head dst error");
             return NetworkError::INVALID_DESTINATION;
         }
         // option = head.get_option();
@@ -220,10 +229,11 @@ NetworkError Packet::load_flit(const network::ip_address_t this_id, Flit &&flit)
         header_finished = only_header(header);
         if (header_finished) {
             current_flit_index++;
+            LOGI("Packet::load_flit", "header finished");
             break;
         }
         data.resize(flit_length * CONFIG_FLIT_LENGTH);
-
+        LOGI("Packet::load_flit", "head flit_length: %d", flit_length);
         break;
     }
     case FlitType::Body: {
@@ -231,10 +241,12 @@ NetworkError Packet::load_flit(const network::ip_address_t this_id, Flit &&flit)
         auto id = body.get_id();
         current_flit_index++;
         if (current_flit_index != id) {
+            LOGW("Packet::load_flit", "body id error, expected: %d, actual: %d", current_flit_index, id);
             return NetworkError::INVALID_ID;
         }
         auto err = body.validate();
         if (err != NetworkError::OK) {
+            LOGW("Packet::load_flit", "body flit validate error %d", err);
             return err;
         }
         auto flit_data = body.get_data();
@@ -242,6 +254,7 @@ NetworkError Packet::load_flit(const network::ip_address_t this_id, Flit &&flit)
             auto base = (id - (head_length + CONFIG_MESSAGE_LENGTH - 1) / CONFIG_MESSAGE_LENGTH) * CONFIG_MESSAGE_LENGTH
                         - head_length % CONFIG_MESSAGE_LENGTH;
             if (base + CONFIG_MESSAGE_LENGTH >= data.size()) {
+                LOGW("Packet::load_flit", "body base error, base: %d, flit_length: %d", base, flit_length);
                 return NetworkError::INVALID_ID;
             }
             for (auto i = base; i < base + CONFIG_MESSAGE_LENGTH; i++) {
@@ -252,9 +265,11 @@ NetworkError Packet::load_flit(const network::ip_address_t this_id, Flit &&flit)
         std::size_t last_index = 0;
         err = parse_header(flit_data, last_index);
         if (err != NetworkError::OK) {
+            LOGW("Packet::load_flit", "body parse header error, %d", err);
             return err;
         }
         if (last_index == flit_data.size()) {
+            // header only body
             return NetworkError::OK;
         }
         for (auto i = last_index; i < CONFIG_MESSAGE_LENGTH; i++) {
@@ -273,6 +288,7 @@ NetworkError Packet::load_flit(const network::ip_address_t this_id, Flit &&flit)
         }
         auto err = tail.validate();
         if (err != NetworkError::OK) {
+            LOGW("Packet::load_flit", "tail flit validate error, %d", err);
             return err;
         }
         auto flit_data = tail.get_data();
@@ -280,6 +296,7 @@ NetworkError Packet::load_flit(const network::ip_address_t this_id, Flit &&flit)
             auto base = (id - (head_length + CONFIG_MESSAGE_LENGTH - 1) / CONFIG_MESSAGE_LENGTH) * CONFIG_MESSAGE_LENGTH
                         - head_length % CONFIG_MESSAGE_LENGTH;
             if (base + CONFIG_MESSAGE_LENGTH >= data.size()) {
+                LOGW("Packet::load_flit", "tail base error, base: %d, flit_length: %d", base, flit_length);
                 return NetworkError::INVALID_ID;
             }
             for (auto i = base; i < base + CONFIG_MESSAGE_LENGTH; i++) {
@@ -290,9 +307,11 @@ NetworkError Packet::load_flit(const network::ip_address_t this_id, Flit &&flit)
         std::size_t last_index = 0;
         err = parse_header(flit_data, last_index);
         if (err != NetworkError::OK) {
+            LOGW("Packet::load_flit", "tail parse header error, %d", err);
             return err;
         }
         if (last_index == flit_data.size()) {
+            LOGI("Packet::load_flit", "last index tail, expected: %d, actual: %d", CONFIG_MESSAGE_LENGTH, last_index);
             return NetworkError::OK;
         }
         for (auto i = last_index; i < CONFIG_MESSAGE_LENGTH; i++) {
@@ -300,7 +319,7 @@ NetworkError Packet::load_flit(const network::ip_address_t this_id, Flit &&flit)
         }
         break;
     }
-    case FlitType::Nope: return NetworkError::INVALID_NOPE;
+    case FlitType::Nope: LOGW("Packet::load_flit", "nope flit"); return NetworkError::INVALID_NOPE;
     default: break;
     }
     return NetworkError::OK;

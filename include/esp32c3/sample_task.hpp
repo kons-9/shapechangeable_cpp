@@ -1,5 +1,6 @@
 // in sample/estiotion.cpp
-void responce_estimation_task(void *args);
+void sample_estimation_task(void *args);
+void sample_other_confirmed_estimaiton_task(void *args);
 
 // in sample/display.cpp
 void sample_display_task(void *args);

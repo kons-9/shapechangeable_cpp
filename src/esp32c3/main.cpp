@@ -22,10 +22,12 @@ static constexpr gpio_num_t RX_PIN = GPIO_NUM_20;
 
 const static char *TAG = "main";
 
-static serial::Uart uart(TX_PIN, RX_PIN);
+static serial::Link uart(TX_PIN, RX_PIN);
 static display::LGFX lov_display(SCLK, MOSI, DC, CS, RST, MISO);
 static fs::SpiFFS spiffs;
 static uint16_t image[128 * 128 + 1];
+
+static TaskArgs<serial::Link, fs::SpiFFS> arg(uart, lov_display, spiffs, image, 1);
 
 static void log_init(void) {
     // wait until uart is ready
@@ -40,17 +42,28 @@ static void printf_task(void *args) {
     }
 }
 
+#define USER1
 
 extern "C" void app_main() {
+    lov_display.init();
     log_init();
 
     ESP_LOGI(TAG, "app main start!");
     // todo
     ota::ota_init();
     uart.uart_init();
-    auto arg = TaskArgs<serial::Uart, fs::SpiFFS>(uart, lov_display, spiffs, (uint16_t *)image, 1);
 
+    // xTaskCreate(sample_uart_rx_task, "sample_uart_rx_task", 8096, &arg, 1, NULL);
+    // xTaskCreate(sample_uart_tx_task, "sample_uart_tx_task", 8096, &arg, 5, NULL);
     xTaskCreate(hello_ferris_task, "hello_ferris_task", 8096, &arg, 1, NULL);
+    // xTaskCreate(sample_display_task, "sample_display_task", 8096, &arg, 1, NULL);
+
     // xTaskCreate(responce_estimation_task, "main_task", 8096, &arg, 1, NULL);
-    xTaskCreate(printf_task, "printf_task", 2048, NULL, 1, NULL);
+    // xTaskCreate(printf_task, "printf_task", 2048, NULL, 1, NULL);
+    //
+#ifdef USER1
+    xTaskCreate(sample_estimation_task, "sample_estimation_task", 8096, &arg, 1, NULL);
+#else
+    xTaskCreate(sample_other_confirmed_estimaiton_task, "sample_other_confirmed_task", 8096, &arg, 1, NULL);
+#endif
 }

@@ -3,7 +3,6 @@
 
 #include <cstdint>
 #include <optional>
-#include <variant>
 #include <memory>
 #include <expected>
 
@@ -217,9 +216,6 @@ class TailFlit : public BaseFlit {
         return version == rhs.version && id == rhs.id && data == rhs.data;
     };
 };
-
-// cast前提なので、variantを使う
-using Flit = std::variant<NopeFlit, HeadFlit, BodyFlit, TailFlit>;
 
 std::expected<Flit, NetworkError> decoder(raw_data_t &raw_data);
 

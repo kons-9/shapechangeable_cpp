@@ -1,6 +1,5 @@
 #include "estimation_types.hpp"
 #include <_log.hpp>
-#include <cassert>
 
 namespace estimation {
 int operator==(LocalLocation lhs, LocalLocation rhs) {
@@ -14,8 +13,10 @@ LocalLocation diagonal_location(LocalLocation location) {
     case LocalLocation::LowerLeft: return LocalLocation::UpperRight;
     case LocalLocation::LowerRight: return LocalLocation::UpperLeft;
     }
+
     LOGE("estimation", "diagonal_location");
-    assert(false);
+    // assert(false);
+    return LocalLocation::UpperLeft;
 }
 
 coordinate_t get_root_coordinate(LocalLocation location) {
@@ -27,7 +28,8 @@ coordinate_t get_root_coordinate(LocalLocation location) {
     }
 
     LOGE("estimation", "get_root_coordinate");
-    assert(false);
+    // assert(false);
+    return std::make_pair(0, 0);
 }
 LocalLocation rotate_clockwise(LocalLocation location) {
     switch (location) {
@@ -37,7 +39,8 @@ LocalLocation rotate_clockwise(LocalLocation location) {
     case LocalLocation::LowerRight: return LocalLocation::LowerLeft;
     }
     LOGE("estimation", "rotate_clockwise");
-    assert(false);
+    // assert(false);
+    return LocalLocation::UpperLeft;
 }
 LocalLocation rotate_counterclockwise(LocalLocation location) {
     switch (location) {
@@ -47,6 +50,7 @@ LocalLocation rotate_counterclockwise(LocalLocation location) {
     case LocalLocation::LowerRight: return LocalLocation::UpperRight;
     }
     LOGE("estimation", "rotate_counterclockwise");
-    assert(false);
+    // assert(false);
+    return LocalLocation::UpperLeft;
 }
 }
