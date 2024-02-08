@@ -118,25 +118,25 @@ TEST(Estimation, get_confirmed_coordinate) {
         ASSERT_TRUE(estimation::is_finished(this_id, coordinates));
         ASSERT_TRUE(coordinates.empty());
         coordinate_t coordinate = {0, 1};
-        ASSERT_EQ(get_coordinate(this_id, coordinates), coordinate);
+        ASSERT_EQ(get_coordinate(this_id, coordinates)[0].second, coordinate);
 
         this_id = 0b0000'0000'0000'0000'0000'0000'0000'0011;
         ASSERT_TRUE(estimation::is_finished(this_id, coordinates));
         ASSERT_TRUE(coordinates.empty());
         coordinate = {1, 1};
-        ASSERT_EQ(get_coordinate(this_id, coordinates), coordinate);
+        ASSERT_EQ(get_coordinate(this_id, coordinates)[0].second, coordinate);
 
         this_id = 0b0000'0000'0000'0000'0000'0000'0000'0101;
         ASSERT_TRUE(estimation::is_finished(this_id, coordinates));
         ASSERT_TRUE(coordinates.empty());
         coordinate = {1, 0};
-        ASSERT_EQ(get_coordinate(this_id, coordinates), coordinate);
+        ASSERT_EQ(get_coordinate(this_id, coordinates)[0].second, coordinate);
 
         this_id = 0b0000'0000'0000'0000'0000'0000'0000'0111;
         ASSERT_TRUE(estimation::is_finished(this_id, coordinates));
         ASSERT_TRUE(coordinates.empty());
         coordinate = {0, 0};
-        ASSERT_EQ(get_coordinate(this_id, coordinates), coordinate);
+        ASSERT_EQ(get_coordinate(this_id, coordinates)[0].second, coordinate);
     }
     {
         // normal case
@@ -148,23 +148,23 @@ TEST(Estimation, get_confirmed_coordinate) {
         auto root_id = 0b0000'0000'0000'0000'0000'0000'0000'0001;
         auto coordinates = std::vector<std::pair<uint32_t, estimation::coordinate_t>>();
         // send from root_id to this_id
-        coordinates.push_back(std::make_pair(root_id, get_coordinate(root_id, coordinates)));
+        coordinates.push_back(std::make_pair(root_id, get_coordinate(root_id, coordinates)[0].second));
         ASSERT_FALSE(estimation::is_finished(this_id, coordinates));
 
         // send from neighbor_this_node(root2 information) to this_id
         auto neighbor_this_unit_id = 0b0000'0000'0000'0000'0000'0000'0000'1010;
         auto root2_id = 0b0000'0000'0000'0000'0000'0000'0000'0111;
-        coordinates.push_back(std::make_pair(neighbor_this_unit_id, get_coordinate(root2_id, coordinates)));
+        coordinates.push_back(std::make_pair(neighbor_this_unit_id, get_coordinate(root2_id, coordinates)[0].second));
         ASSERT_TRUE(estimation::is_finished(this_id, coordinates));
         coordinate_t coordinate = {-1, 1};
-        ASSERT_EQ(get_coordinate(this_id, coordinates), coordinate);
+        ASSERT_EQ(get_coordinate(this_id, coordinates)[0].second, coordinate);
         coordinates.clear();
 
         // send from this_id to neighbor_this_unit_id
         coordinate = {-1, 0};
         coordinates.push_back(std::make_pair(neighbor_this_unit_id, coordinate));
         ASSERT_TRUE(estimation::is_finished(neighbor_this_unit_id, coordinates));
-        ASSERT_EQ(get_coordinate(neighbor_this_unit_id, coordinates), coordinate);
+        ASSERT_EQ(get_coordinate(neighbor_this_unit_id, coordinates)[0].second, coordinate);
         coordinates.clear();
 
         // send from root_id to this_id
@@ -202,7 +202,7 @@ TEST(Estimation, get_confirmed_coordinate) {
         coordinates.push_back(std::make_pair(same_unit_id, diagonal_coordinate));
         ASSERT_TRUE(estimation::is_finished(this_id, coordinates));
         coordinate_t expected_coordinate = std::make_pair(0, 1);
-        ASSERT_EQ(get_coordinate(this_id, coordinates), expected_coordinate);
+        ASSERT_EQ(get_coordinate(this_id, coordinates)[0].second, expected_coordinate);
         coordinates.clear();
 
         // same_unit(lowerleft), this(lowerright)
@@ -223,7 +223,7 @@ TEST(Estimation, get_confirmed_coordinate) {
         coordinates.push_back(std::make_pair(diagonal_unit_id, diagonal_coordinate));
         ASSERT_TRUE(estimation::is_finished(same_unit_id, coordinates));
         expected_coordinate = std::make_pair(1, 1);
-        ASSERT_EQ(get_coordinate(same_unit_id, coordinates), expected_coordinate);
+        ASSERT_EQ(get_coordinate(same_unit_id, coordinates)[0].second, expected_coordinate);
         coordinates.clear();
 
         // neighbor_this(confirmed, lowerleft), diagonal(confirmed, lowerright)
@@ -243,7 +243,7 @@ TEST(Estimation, get_confirmed_coordinate) {
         coordinates.push_back(std::make_pair(same_unit_id, diagonal_coordinate));
         ASSERT_TRUE(estimation::is_finished(this_id, coordinates));
         expected_coordinate = std::make_pair(0, -1);
-        ASSERT_EQ(get_coordinate(this_id, coordinates), expected_coordinate);
+        ASSERT_EQ(get_coordinate(this_id, coordinates)[0].second, expected_coordinate);
         coordinates.clear();
 
         // diagonal(confirmed, lowerleft), neighbor_this(confirmed, lowerright)
@@ -264,7 +264,7 @@ TEST(Estimation, get_confirmed_coordinate) {
         coordinates.push_back(std::make_pair(same_unit_id, diagonal_coordinate));
         ASSERT_TRUE(estimation::is_finished(this_id, coordinates));
         expected_coordinate = std::make_pair(1, -1);
-        ASSERT_EQ(get_coordinate(this_id, coordinates), expected_coordinate);
+        ASSERT_EQ(get_coordinate(this_id, coordinates)[0].second, expected_coordinate);
         coordinates.clear();
 
         // same x axis
@@ -287,7 +287,7 @@ TEST(Estimation, get_confirmed_coordinate) {
         coordinates.push_back(std::make_pair(same_unit_id, diagonal_coordinate));
         ASSERT_TRUE(estimation::is_finished(this_id, coordinates));
         expected_coordinate = std::make_pair(-1, 1);
-        ASSERT_EQ(get_coordinate(this_id, coordinates), expected_coordinate);
+        ASSERT_EQ(get_coordinate(this_id, coordinates)[0].second, expected_coordinate);
         coordinates.clear();
 
         // neighbor_this(confirmed, upperright), this(upperleft)
@@ -307,7 +307,7 @@ TEST(Estimation, get_confirmed_coordinate) {
         coordinates.push_back(std::make_pair(same_unit_id, diagonal_coordinate));
         ASSERT_TRUE(estimation::is_finished(this_id, coordinates));
         expected_coordinate = std::make_pair(1, 1);
-        ASSERT_EQ(get_coordinate(this_id, coordinates), expected_coordinate);
+        ASSERT_EQ(get_coordinate(this_id, coordinates)[0].second, expected_coordinate);
         coordinates.clear();
 
         // same_unit(upperright), diagonal(confirmed, upperleft)
@@ -328,7 +328,7 @@ TEST(Estimation, get_confirmed_coordinate) {
         coordinates.push_back(std::make_pair(diagonal_unit_id, diagonal_coordinate));
         ASSERT_TRUE(estimation::is_finished(same_unit_id, coordinates));
         expected_coordinate = std::make_pair(-1, 0);
-        ASSERT_EQ(get_coordinate(same_unit_id, coordinates), expected_coordinate);
+        ASSERT_EQ(get_coordinate(same_unit_id, coordinates)[0].second, expected_coordinate);
         coordinates.clear();
 
         // diagonal(confirmed, upperright), same_unit(upperleft)
@@ -348,7 +348,7 @@ TEST(Estimation, get_confirmed_coordinate) {
         coordinates.push_back(std::make_pair(same_unit_id, diagonal_coordinate));
         ASSERT_TRUE(estimation::is_finished(this_id, coordinates));
         expected_coordinate = std::make_pair(1, 0);
-        ASSERT_EQ(get_coordinate(this_id, coordinates), expected_coordinate);
+        ASSERT_EQ(get_coordinate(this_id, coordinates)[0].second, expected_coordinate);
         coordinates.clear();
     }
 }
@@ -393,7 +393,7 @@ TEST(Estimation, process_data) {
         std::vector<std::pair<network::macaddress_t, coordinate_t>> confirmed_coordinates;
         auto err = process_data(src_ip_address, this_ip_address, data, confirmed_coordinates);
         ASSERT_EQ(err, network::NetworkError::OK);
-        ASSERT_EQ(confirmed_coordinates.size(), 1);
+        ASSERT_EQ(confirmed_coordinates.size(), 3);
         ASSERT_EQ(confirmed_coordinates[0].first, make_macaddress(1, LocalLocation::LowerRight, false));
         coordinate_t coordinate = {0, 1};
         ASSERT_EQ(confirmed_coordinates[0].second, coordinate);
@@ -435,7 +435,7 @@ TEST(Estimation, process_data) {
             = macaddress_to_ip_address(make_macaddress(1, LocalLocation::LowerRight, false));
         // src ip address (-2,-2), this ip address (0,1)
         auto vector = std::vector<std::pair<LocalLocation, coordinate_t>>{
-            // {LocalLocation::LowerLeft, {-2, -2}},
+            {LocalLocation::LowerLeft, {-2, -2}},
             {LocalLocation::UpperLeft, {-2, -1}},
             {LocalLocation::UpperRight, {-1, -1}},
             {LocalLocation::LowerRight, {-1, -2}},
@@ -455,10 +455,13 @@ TEST(Estimation, process_data) {
         std::vector<std::pair<network::macaddress_t, coordinate_t>> confirmed_coordinates;
         auto err = process_data(src_ip_address, this_ip_address, data, confirmed_coordinates);
         ASSERT_EQ(err, network::NetworkError::OK);
-        ASSERT_EQ(confirmed_coordinates.size(), 1);
-        ASSERT_EQ(confirmed_coordinates[0].first, make_macaddress(1, LocalLocation::LowerRight, false));
+        ASSERT_EQ(confirmed_coordinates.size(), 4);
+        auto index = std::find_if(confirmed_coordinates.begin(), confirmed_coordinates.end(), [](auto pair) {
+            return pair.first == make_macaddress(1, LocalLocation::LowerRight, false);
+        });
+        ASSERT_EQ(index != confirmed_coordinates.end(), true);
         coordinate_t coordinate = {-1, -2};
-        ASSERT_EQ(confirmed_coordinates[0].second, coordinate);
+        ASSERT_EQ((*index).second, coordinate);
     }
     {
         // same unit node is not confirmed
@@ -606,7 +609,143 @@ TEST(TemplateEstimation, serial) {
 }
 
 TEST(TemplateEstimation, init_coordinate) {
-    // ASSERT_EQ("TODO", "implement");
+    auto serial = test::SerialMock();
+
+    auto packet = network::Packet();
+    // conf1(0,1) nodea nodeb
+    // conf2(0,0) nodec noded
+    auto confirmed1_id = make_macaddress(3, LocalLocation::UpperRight, false);
+    auto confirmed2_id = make_macaddress(3, LocalLocation::LowerRight, false);
+
+    auto nodea_id = make_macaddress(4, LocalLocation::UpperLeft, false);
+    auto a_confirmed_coordinates = std::vector<std::pair<network::macaddress_t, coordinate_t>>();
+
+    auto nodeb_id = make_macaddress(4, LocalLocation::UpperRight, false);
+    auto b_confirmed_coordinates = std::vector<std::pair<network::macaddress_t, coordinate_t>>();
+
+    auto nodec_id = make_macaddress(4, LocalLocation::LowerLeft, false);
+    auto c_confirmed_coordinates = std::vector<std::pair<network::macaddress_t, coordinate_t>>();
+
+    auto noded_id = make_macaddress(4, LocalLocation::LowerRight, false);
+    auto d_confirmed_coordinates = std::vector<std::pair<network::macaddress_t, coordinate_t>>();
+
+    // a <-> conf1
+    packet = make_request(nodea_id);
+    auto err = packet.send(serial, nodea_id, network::DefaultRouting());
+    ASSERT_EQ(err, network::NetworkError::OK);
+    auto err_b = packet.receive(serial, confirmed1_id);
+    ASSERT_TRUE(err_b);
+    ASSERT_EQ(packet.get_header(), network::Header::COORDINATE_ESTIMATION);
+    packet = make_response_to_other_unit(confirmed1_id, coordinate_t{0, 1});
+    err = packet.send(serial, confirmed1_id, network::DefaultRouting());
+    ASSERT_EQ(err, traits::SerialError::Ok);
+    err_b = packet.receive(serial, nodea_id);
+    ASSERT_TRUE(err_b);
+    auto err_n = process_data(confirmed1_id, nodea_id, packet.get_data(), a_confirmed_coordinates);
+    ASSERT_EQ(err_n, network::NetworkError::OK);
+    ASSERT_FALSE(is_finished(nodea_id, a_confirmed_coordinates));
+    ASSERT_EQ(a_confirmed_coordinates.size(), 1);
+
+    // c <- conf2
+    packet = make_response_to_other_unit(confirmed2_id, coordinate_t{0, 0});
+    err = packet.send(serial, confirmed2_id, network::DefaultRouting());
+    ASSERT_EQ(err, traits::SerialError::Ok);
+    err_b = packet.receive(serial, nodec_id);
+    ASSERT_TRUE(err_b);
+    err_n = process_data(confirmed2_id, nodec_id, packet.get_data(), c_confirmed_coordinates);
+    ASSERT_EQ(err_n, network::NetworkError::OK);
+    ASSERT_FALSE(is_finished(nodec_id, c_confirmed_coordinates));
+    ASSERT_EQ(c_confirmed_coordinates.size(), 1);
+
+    // c -> a
+    packet = make_response_to_same_unit(false, nodec_id, c_confirmed_coordinates);
+    err = packet.send(serial, nodec_id, network::DefaultRouting());
+    ASSERT_EQ(err, network::NetworkError::OK);
+    err_b = packet.receive(serial, nodea_id);
+    ASSERT_TRUE(err_b);
+    err_n = process_data(nodec_id, nodea_id, packet.get_data(), a_confirmed_coordinates);
+    ASSERT_EQ(err_n, network::NetworkError::OK);
+    ASSERT_TRUE(is_finished(nodea_id, a_confirmed_coordinates));
+    a_confirmed_coordinates = get_coordinate(nodea_id, a_confirmed_coordinates);
+    auto iter = std::find_if(a_confirmed_coordinates.begin(), a_confirmed_coordinates.end(), [nodea_id](auto pair) {
+        return pair.first == nodea_id;
+    });
+    ASSERT_EQ(a_confirmed_coordinates.size(), 4);
+    ASSERT_NE(iter, a_confirmed_coordinates.end());
+    ASSERT_EQ(iter->first, nodea_id);
+    ASSERT_EQ(iter->second, (coordinate_t{1, 1}));
+
+    iter = std::find_if(a_confirmed_coordinates.begin(), a_confirmed_coordinates.end(), [nodeb_id](auto pair) {
+        return pair.first == nodeb_id;
+    });
+    ASSERT_NE(iter, a_confirmed_coordinates.end());
+    ASSERT_EQ(iter->first, nodeb_id);
+    ASSERT_EQ(iter->second, (coordinate_t{2, 1}));
+
+    iter = std::find_if(a_confirmed_coordinates.begin(), a_confirmed_coordinates.end(), [nodec_id](auto pair) {
+        return pair.first == nodec_id;
+    });
+    ASSERT_NE(iter, a_confirmed_coordinates.end());
+    ASSERT_EQ(iter->first, nodec_id);
+    ASSERT_EQ(iter->second, (coordinate_t{1, 0}));
+
+    iter = std::find_if(a_confirmed_coordinates.begin(), a_confirmed_coordinates.end(), [noded_id](auto pair) {
+        return pair.first == noded_id;
+    });
+    ASSERT_NE(iter, a_confirmed_coordinates.end());
+    ASSERT_EQ(iter->first, noded_id);
+    ASSERT_EQ(iter->second, (coordinate_t{2, 0}));
+
+    // a -> c
+    packet = make_response_to_same_unit(true, nodea_id, a_confirmed_coordinates);
+    err = packet.send(serial, nodea_id, network::DefaultRouting());
+    ASSERT_EQ(err, network::NetworkError::OK);
+    err_b = packet.receive(serial, nodec_id);
+    ASSERT_TRUE(err_b);
+    err_n = process_data(nodea_id, nodec_id, packet.get_data(), c_confirmed_coordinates);
+    ASSERT_EQ(err_n, network::NetworkError::OK);
+    ASSERT_TRUE(is_finished(nodec_id, c_confirmed_coordinates));
+    c_confirmed_coordinates = get_coordinate(nodec_id, c_confirmed_coordinates);
+    iter = std::find_if(c_confirmed_coordinates.begin(), c_confirmed_coordinates.end(), [nodec_id](auto pair) {
+        return pair.first == nodec_id;
+    });
+    ASSERT_NE(iter, c_confirmed_coordinates.end());
+    ASSERT_EQ(iter->first, nodec_id);
+    ASSERT_EQ(iter->second, (coordinate_t{1, 0}));
+
+    // c -> d
+    packet = make_response_to_same_unit(true, nodec_id, c_confirmed_coordinates);
+    err = packet.send(serial, nodec_id, network::DefaultRouting());
+    ASSERT_EQ(err, network::NetworkError::OK);
+    err_b = packet.receive(serial, noded_id);
+    ASSERT_TRUE(err_b);
+    err_n = process_data(nodec_id, noded_id, packet.get_data(), d_confirmed_coordinates);
+    ASSERT_EQ(err_n, network::NetworkError::OK);
+    ASSERT_TRUE(is_finished(noded_id, d_confirmed_coordinates));
+    d_confirmed_coordinates = get_coordinate(noded_id, d_confirmed_coordinates);
+    iter = std::find_if(d_confirmed_coordinates.begin(), d_confirmed_coordinates.end(), [noded_id](auto pair) {
+        return pair.first == noded_id;
+    });
+    ASSERT_NE(iter, d_confirmed_coordinates.end());
+    ASSERT_EQ(iter->first, noded_id);
+    ASSERT_EQ(iter->second, (coordinate_t{2, 0}));
+
+    // d -> b
+    packet = make_response_to_same_unit(true, noded_id, d_confirmed_coordinates);
+    err = packet.send(serial, noded_id, network::DefaultRouting());
+    ASSERT_EQ(err, network::NetworkError::OK);
+    err_b = packet.receive(serial, nodeb_id);
+    ASSERT_TRUE(err_b);
+    err_n = process_data(noded_id, nodeb_id, packet.get_data(), b_confirmed_coordinates);
+    ASSERT_EQ(err_n, network::NetworkError::OK);
+    ASSERT_TRUE(is_finished(nodeb_id, b_confirmed_coordinates));
+    b_confirmed_coordinates = get_coordinate(nodeb_id, b_confirmed_coordinates);
+    iter = std::find_if(b_confirmed_coordinates.begin(), b_confirmed_coordinates.end(), [nodeb_id](auto pair) {
+        return pair.first == nodeb_id;
+    });
+    ASSERT_NE(iter, b_confirmed_coordinates.end());
+    ASSERT_EQ(iter->first, nodeb_id);
+    ASSERT_EQ(iter->second, (coordinate_t{2, 1}));
 }
 
 }  // namespace estimation

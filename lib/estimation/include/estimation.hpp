@@ -19,7 +19,8 @@ coordinate_t init_coordinate(TaskArgs<T, F> &args);
 bool is_finished(network::ip_address_t this_id,
                  const std::vector<std::pair<uint32_t, coordinate_t>> &confirmed_coordinates);
 auto get_coordinate(network::ip_address_t this_id,
-                    const std::vector<std::pair<uint32_t, coordinate_t>> &confirmed_coordinates) -> coordinate_t;
+                    const std::vector<std::pair<uint32_t, coordinate_t>> &confirmed_coordinates)
+    -> std::vector<std::pair<network::macaddress_t, coordinate_t>>;
 
 bool is_any_one_distance_neighbor(const std::vector<std::pair<network::macaddress_t, coordinate_t>> &coordinates);
 

@@ -46,6 +46,7 @@ static void printf_task(void *args) {
 
 extern "C" void app_main() {
     lov_display.init();
+    lov_display.setRotation(3);
     log_init();
 
     ESP_LOGI(TAG, "app main start!");
@@ -55,14 +56,15 @@ extern "C" void app_main() {
 
     // xTaskCreate(sample_uart_rx_task, "sample_uart_rx_task", 8096, &arg, 1, NULL);
     // xTaskCreate(sample_uart_tx_task, "sample_uart_tx_task", 8096, &arg, 5, NULL);
-    xTaskCreate(hello_ferris_task, "hello_ferris_task", 8096, &arg, 1, NULL);
+    // xTaskCreate(hello_ferris_task, "hello_ferris_task", 8096, &arg, 1, NULL);
     // xTaskCreate(sample_display_task, "sample_display_task", 8096, &arg, 1, NULL);
 
     // xTaskCreate(responce_estimation_task, "main_task", 8096, &arg, 1, NULL);
     // xTaskCreate(printf_task, "printf_task", 2048, NULL, 1, NULL);
     //
+    xTaskCreate(sample_tei_demo_app, "sample_tei_demo_app", 8096, &arg, 1, NULL);
 #ifdef USER1
-    xTaskCreate(sample_estimation_task, "sample_estimation_task", 8096, &arg, 1, NULL);
+    // xTaskCreate(sample_estimation_task, "sample_estimation_task", 8096, &arg, 1, NULL);
 #else
     xTaskCreate(sample_other_confirmed_estimaiton_task, "sample_other_confirmed_task", 8096, &arg, 1, NULL);
 #endif

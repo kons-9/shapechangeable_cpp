@@ -40,5 +40,6 @@ LocalLocation diagonal_location(LocalLocation location);
 coordinate_t get_root_coordinate(LocalLocation location);
 LocalLocation rotate_clockwise(LocalLocation location);
 LocalLocation rotate_counterclockwise(LocalLocation location);
+network::macaddress_t change_local_location(network::macaddress_t macaddress, LocalLocation local_location);
 
 }  // namespace estimation

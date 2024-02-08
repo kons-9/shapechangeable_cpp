@@ -21,4 +21,9 @@ bool is_same_unit_node(network::macaddress_t macaddress1, network::macaddress_t 
 network::ip_address_t macaddress_to_ip_address(network::macaddress_t macaddress) {
     return macaddress & std::numeric_limits<network::ip_address_t>::max();
 }
+
+network::macaddress_t change_local_location(network::macaddress_t macaddress, LocalLocation local_location) {
+    return (macaddress & ~LOCAL_LOCATION_MASK)
+           | (static_cast<network::macaddress_t>(local_location) << LOCAL_LOCATION_POSITION);
 }
+}  // namespace estimation

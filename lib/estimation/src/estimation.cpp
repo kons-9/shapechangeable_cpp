@@ -33,19 +33,30 @@ bool is_finished(network::ip_address_t this_id,
     return is_any_one_distance_neighbor(confirmed_coordinates);
 }
 auto get_coordinate(network::ip_address_t this_id,
-                    const std::vector<std::pair<uint32_t, coordinate_t>> &confirmed_coordinates) -> coordinate_t {
+                    const std::vector<std::pair<uint32_t, coordinate_t>> &confirmed_coordinates)
+    -> std::vector<std::pair<network::macaddress_t, coordinate_t>> {
     if (is_root((network::macaddress_t)this_id)) {
-        return get_root_coordinate(get_local_location(this_id));
+        return {std::pair(this_id, get_root_coordinate(get_local_location(this_id)))};
     }
     if (confirmed_coordinates.size() == 0) {
         LOGE(TAG, "no confirmed coordinates");
         assert(false);
     }
-    if (confirmed_coordinates.size() == 1) {
-        // must be my coordinate
-        assert(confirmed_coordinates[0].first == this_id);
-        return confirmed_coordinates[0].second;
+    std::vector<std::pair<network::macaddress_t, coordinate_t>> unit_coordinates;
+
+    for (auto i = 0; i < confirmed_coordinates.size(); i++) {
+        if (is_same_unit_node(this_id, confirmed_coordinates[i].first)) {
+            unit_coordinates.push_back(confirmed_coordinates[i]);
+        }
+        if (confirmed_coordinates[i].first == this_id) {
+            // swap to first
+            std::swap(unit_coordinates[0], unit_coordinates[i]);
+        }
     }
+    if (!unit_coordinates.empty() && unit_coordinates[0].first == this_id) {
+        return unit_coordinates;
+    }
+    unit_coordinates.clear();
 
     // find_one_distance_neighbor
     auto same_unit = confirmed_coordinates.end();
@@ -97,47 +108,156 @@ found:
         assert(false);
     }
 
+    coordinate_t this_coordinate;
+    coordinate_t same_unit_coordinate;
+
     if (has_same_x) {
-        // if (clockwise) {
-        //     if (same_unit_node_has_bigger) {
-        //         // same_unit, diagonal
-        //         // this , neighbor
-        //         return std::make_pair(neighbor_coordinate.first - 1, neighbor_coordinate.second);
-        //     } else {
-        //         return std::make_pair(neighbor_coordinate.first + 1, neighbor_coordinate.second);
-        //     }
-        // } else {
-        //     if (same_unit_node_has_bigger) {
-        //         // diagonal, same_unit
-        //         // neighbor, this
-        //         return std::make_pair(neighbor_coordinate.first + 1, neighbor_coordinate.second);
-        //     } else {
-        //         return std::make_pair(neighbor_coordinate.first - 1, neighbor_coordinate.second);
-        //     }
-        // }
-        auto add_x = (clockwise ^ same_unit_node_has_bigger) + (clockwise ^ !same_unit_node_has_bigger) * -1;
-        return std::make_pair(neighbor_coordinate.first + add_x, neighbor_coordinate.second);
+        if (clockwise) {
+            if (same_unit_node_has_bigger) {
+                // same_unit, diagonal
+                // this , neighbor
+                unit_coordinates.push_back(
+                    std::make_pair(this_id, std::make_pair(neighbor_coordinate.first - 1, neighbor_coordinate.second)));
+                unit_coordinates.push_back(
+                    std::make_pair(same_unit_id,
+                                   std::make_pair(diagonal_coordinate.first - 1, diagonal_coordinate.second)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_counterclockwise(get_local_location(same_unit_id))),
+                                   std::make_pair(diagonal_coordinate.first - 2, diagonal_coordinate.second)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_clockwise(rotate_counterclockwise(
+                                                             get_local_location(same_unit_id)))),
+                                   std::make_pair(neighbor_coordinate.first - 2, neighbor_coordinate.second)));
+            } else {
+                unit_coordinates.push_back(
+                    std::make_pair(this_id, std::make_pair(neighbor_coordinate.first + 1, neighbor_coordinate.second)));
+                unit_coordinates.push_back(
+                    std::make_pair(same_unit_id,
+                                   std::make_pair(diagonal_coordinate.first + 1, diagonal_coordinate.second)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_counterclockwise(get_local_location(same_unit_id))),
+                                   std::make_pair(diagonal_coordinate.first + 2, diagonal_coordinate.second)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_counterclockwise(rotate_counterclockwise(
+                                                             get_local_location(same_unit_id)))),
+                                   std::make_pair(neighbor_coordinate.first + 2, neighbor_coordinate.second)));
+            }
+        } else {
+            if (same_unit_node_has_bigger) {
+                // diagonal, same_unit
+                // neighbor, this
+                unit_coordinates.push_back(
+                    std::make_pair(this_id, std::make_pair(neighbor_coordinate.first + 1, neighbor_coordinate.second)));
+                unit_coordinates.push_back(
+                    std::make_pair(same_unit_id,
+                                   std::make_pair(diagonal_coordinate.first + 1, diagonal_coordinate.second)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_clockwise(get_local_location(same_unit_id))),
+                                   std::make_pair(diagonal_coordinate.first + 2, diagonal_coordinate.second)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_clockwise(
+                                                             rotate_clockwise(get_local_location(same_unit_id)))),
+                                   std::make_pair(neighbor_coordinate.first + 2, neighbor_coordinate.second)));
+            } else {
+                unit_coordinates.push_back(
+                    std::make_pair(this_id, std::make_pair(neighbor_coordinate.first - 1, neighbor_coordinate.second)));
+                unit_coordinates.push_back(
+                    std::make_pair(same_unit_id,
+                                   std::make_pair(diagonal_coordinate.first - 1, diagonal_coordinate.second)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_clockwise(get_local_location(same_unit_id))),
+                                   std::make_pair(diagonal_coordinate.first - 2, diagonal_coordinate.second)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_clockwise(
+                                                             rotate_clockwise(get_local_location(same_unit_id)))),
+                                   std::make_pair(neighbor_coordinate.first - 2, neighbor_coordinate.second)));
+            }
+        }
     } else {
-        // if (clockwise) {
-        //     if (same_unit_node_has_bigger) {
-        //         // this, same_unit
-        //         // neighbor, diagonal
-        //         return std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second + 1);
-        //     } else {
-        //         // diagonal, neighbor
-        //         // same_unit, this
-        //         return std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second - 1);
-        //     }
-        // } else {
-        //     if (same_unit_node_has_bigger) {
-        //         return std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second - 1);
-        //     } else {
-        //         return std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second + 1);
-        //     }
-        // }
-        auto add_y = (clockwise ^ same_unit_node_has_bigger) * -1 + (clockwise ^ !same_unit_node_has_bigger);
-        return std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second + add_y);
+        if (clockwise) {
+            if (same_unit_node_has_bigger) {
+                // this, same_unit
+                // neighbor, diagonal
+                unit_coordinates.push_back(
+                    std::make_pair(this_id, std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second + 1)));
+                unit_coordinates.push_back(
+                    std::make_pair(same_unit_id,
+                                   std::make_pair(diagonal_coordinate.first, diagonal_coordinate.second + 1)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_counterclockwise(get_local_location(same_unit_id))),
+                                   std::make_pair(diagonal_coordinate.first, diagonal_coordinate.second + 2)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_counterclockwise(rotate_counterclockwise(
+                                                             get_local_location(same_unit_id)))),
+                                   std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second + 2)));
+
+                // return std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second + 1);
+            } else {
+                // diagonal, neighbor
+                // same_unit, this
+                unit_coordinates.push_back(
+                    std::make_pair(this_id, std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second - 1)));
+                unit_coordinates.push_back(
+                    std::make_pair(same_unit_id,
+                                   std::make_pair(diagonal_coordinate.first, diagonal_coordinate.second - 1)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_counterclockwise(get_local_location(same_unit_id))),
+                                   std::make_pair(diagonal_coordinate.first, diagonal_coordinate.second - 2)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_counterclockwise(rotate_counterclockwise(
+                                                             get_local_location(same_unit_id)))),
+                                   std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second - 2)));
+                // return std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second - 1);
+            }
+        } else {
+            if (same_unit_node_has_bigger) {
+                unit_coordinates.push_back(
+                    std::make_pair(this_id, std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second - 1)));
+                unit_coordinates.push_back(
+                    std::make_pair(same_unit_id,
+                                   std::make_pair(diagonal_coordinate.first, diagonal_coordinate.second - 1)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_clockwise(get_local_location(same_unit_id))),
+                                   std::make_pair(diagonal_coordinate.first, diagonal_coordinate.second - 2)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_clockwise(
+                                                             rotate_clockwise(get_local_location(same_unit_id)))),
+                                   std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second - 2)));
+                // return std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second - 1);
+            } else {
+                unit_coordinates.push_back(
+                    std::make_pair(this_id, std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second + 1)));
+                unit_coordinates.push_back(
+                    std::make_pair(same_unit_id,
+                                   std::make_pair(diagonal_coordinate.first, diagonal_coordinate.second + 1)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_clockwise(get_local_location(same_unit_id))),
+                                   std::make_pair(diagonal_coordinate.first, diagonal_coordinate.second + 2)));
+                unit_coordinates.push_back(
+                    std::make_pair(change_local_location(same_unit_id,
+                                                         rotate_clockwise(
+                                                             rotate_clockwise(get_local_location(same_unit_id)))),
+                                   std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second + 2)));
+                // return std::make_pair(neighbor_coordinate.first, neighbor_coordinate.second + 1);
+            }
+        }
     }
+    return unit_coordinates;
 }
 auto process_data(const network::ip_address_t src,
                   const network::ip_address_t this_ip_address,
@@ -158,22 +278,26 @@ auto process_data(const network::ip_address_t src,
 
             // must contain 3 coordinates
             // 1 is is_confirm, 6 is mac address and coordinate
-            if (data.size() != 1 + 6 * 3) {
-                return network::NetworkError::DATA_SIZE_ERROR;
-            }
+            // if (data.size() != 1 + 6 * 3) {
+            //     return network::NetworkError::DATA_SIZE_ERROR;
+            // }
+            auto flag = false;
+            confirmed_coordinates.clear();
             for (auto iter = data.begin() + 1; iter != data.end(); iter += 6) {
                 network::macaddress_t mac_address = ((*iter) << 8) | *(iter + 1);
                 coordinate_unit_t x = (*(iter + 2) << 8) | *(iter + 3);
                 coordinate_unit_t y = (*(iter + 4) << 8) | *(iter + 5);
                 coordinate_t coordinate = std::make_pair(x, y);
+                confirmed_coordinates.push_back(std::make_pair(mac_address, coordinate));
                 if (mac_address == this_ip_address) {
-                    // erase all data
-                    confirmed_coordinates.clear();
-                    confirmed_coordinates.push_back(std::make_pair(mac_address, coordinate));
-                    return network::NetworkError::OK;
+                    flag = true;
                 }
             }
-            return network::NetworkError::INVALID_DATA;
+            if (!flag) {
+                confirmed_coordinates.clear();
+                return network::NetworkError::INVALID_DATA;
+            }
+            return network::NetworkError::OK;
         }
         coordinate_unit_t x = (data[3] << 8) | data[4];
         coordinate_unit_t y = (data[5] << 8) | data[6];
@@ -235,6 +359,16 @@ auto make_response_to_same_unit(
             }
         }
     }
+
+    for (auto iter = filtered_coordinates.begin(); iter != filtered_coordinates.end(); iter++) {
+        data.push_back(static_cast<uint8_t>(iter->first >> 8));
+        data.push_back(static_cast<uint8_t>(iter->first));
+        data.push_back(static_cast<uint8_t>(iter->second.first >> 8));
+        data.push_back(static_cast<uint8_t>(iter->second.first));
+        data.push_back(static_cast<uint8_t>(iter->second.second >> 8));
+        data.push_back(static_cast<uint8_t>(iter->second.second));
+    }
+
     return network::Packet(network::Header::COORDINATE_ESTIMATION_RSP,
                            network::packetid_t(0),
                            this_ip_address,

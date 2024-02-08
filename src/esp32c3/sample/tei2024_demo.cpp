@@ -16,11 +16,11 @@ void sample_tei_demo_app(void *arg) {
     auto ipaddress = estimation::macaddress_to_ip_address(macaddress);
     auto image = task_args->image_buffer;
     std::vector<std::pair<network::macaddress_t, estimation::coordinate_t>> coordinates;
-    estimation::coordinate_t coordinate;
+    LOGI(TAG, "ipaddress: %u", ipaddress);
 
     // firstly, confirm the coordinate
     LOGI(TAG, "confirming the coordinate...");
-    while (estimation::is_finished(ipaddress, coordinates)) {
+    while (!estimation::is_finished(ipaddress, coordinates)) {
         auto packet = estimation::make_request(ipaddress);
         packet.send(uart, ipaddress, network::DefaultRouting());
         auto err = packet.receive(uart, ipaddress);
@@ -43,17 +43,21 @@ void sample_tei_demo_app(void *arg) {
         std::vector<std::pair<network::macaddress_t, estimation::coordinate_t>> coordinates;
         err = estimation::process_data(packet.get_src(), ipaddress, packet.get_data(), coordinates);
     }
-    coordinate = estimation::get_coordinate(ipaddress, coordinates);
-    LOGI(TAG, "confirmed coordinate: x: %d, y: %d", coordinate.first, coordinate.second);
+    coordinates = estimation::get_coordinate(ipaddress, coordinates);
+    auto iter = std::find_if(coordinates.begin(), coordinates.end(), [ipaddress](auto &pair) {
+        return pair.first == ipaddress;
+    });
+    auto coordinate = (*iter).second;
+    LOGI(TAG, "confirmed coordinate: x: %ld, y: %ld", coordinate.first, coordinate.second);
 
     // secondly, display test_x_y.raw
-    LOGI(TAG, "displaying test_%d_%d.raw...", coordinate.first, coordinate.second);
-    auto basepath = "/spiffs/test_%d_%d.raw";
+    LOGI(TAG, "displaying test_%ld_%ld.raw...", coordinate.first, coordinate.second);
+    auto basepath = "/spiffs/test_%ld_%ld.raw";
     char path[100];
     sprintf(path, basepath, coordinate.first, coordinate.second);
 
     auto len = spiffs.read_image(path, image, 128 * 128);
-    LOGI(TAG, "readed image: %d", len);
+    LOGI(TAG, "readed image: %u", len);
     lov_display.pushImage(0, 0, 128, 128, image);
 
     // finaly, response
@@ -73,8 +77,7 @@ void sample_tei_demo_app(void *arg) {
         if (estimation::is_same_unit_node(packet.get_src(), ipaddress)) {
             LOGI(TAG, "same unit node");
             // TODO
-            // めんどくさいので確定していないことにして返す。ちゃんと渡れば確定しできるはず
-            auto not_confirmed_packet = estimation::make_response_to_same_unit(false, ipaddress, coordinates);
+            auto not_confirmed_packet = estimation::make_response_to_same_unit(true, ipaddress, coordinates);
             not_confirmed_packet.send(uart, ipaddress, network::DefaultRouting());
         } else {
             LOGI(TAG, "different unit node");

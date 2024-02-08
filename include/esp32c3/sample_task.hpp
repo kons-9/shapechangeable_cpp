@@ -9,3 +9,6 @@ void hello_ferris_task(void *args);
 // in sample/uart.cpp
 void sample_uart_rx_task(void *args);
 void sample_uart_tx_task(void *args);
+
+// tei2024
+void sample_tei_demo_app(void *arg);
